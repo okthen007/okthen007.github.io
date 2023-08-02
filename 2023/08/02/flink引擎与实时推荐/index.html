@@ -20,21 +20,21 @@
     var CONFIG = {"hostname":"shuo-shuo.site","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="NeuralCF 模型的结构把矩阵分解神经网络化之后，把它跟 Embedding+MLP 以及 Wide&amp;Deep 模型做对比，我们可以一眼看出网络中的薄弱环节：矩阵分解在 Embedding 层之上的操作好像过于简单了，就是直接利用内积得出最终结果。这会导致特征之间还没有充分交叉就直接输出结果，模型会有欠拟合的风险。针对这一弱点，NeuralCF 对矩阵分解进行了改进，它的结构图见下图">
+  <meta name="description" content="Flink引擎与KafkaFlink是流处理框架，Kafka消息队列是最广泛使用的消息队列（JDQ、JMQ），Flink引擎通常用来处理 Kafka消息队列中的消息（Topic）； Flink 介绍 Flink 提供两种类型类型 API：DataStream API; Table API;（数据流中同样提供两种API形式做数据处理，并提供可以进行转换的算子进行不同API间算子的串联） Datast">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NeuralCF：如何用深度学习改造协同过滤？">
-<meta property="og:url" content="http://shuo-shuo.site/2023/07/31/NeuralCF/index.html">
+<meta property="og:title" content="Flink 引擎与实时推荐">
+<meta property="og:url" content="http://shuo-shuo.site/2023/08/02/flink%E5%BC%95%E6%93%8E%E4%B8%8E%E5%AE%9E%E6%97%B6%E6%8E%A8%E8%8D%90/index.html">
 <meta property="og:site_name" content="Sure&#39;s BLOG">
-<meta property="og:description" content="NeuralCF 模型的结构把矩阵分解神经网络化之后，把它跟 Embedding+MLP 以及 Wide&amp;Deep 模型做对比，我们可以一眼看出网络中的薄弱环节：矩阵分解在 Embedding 层之上的操作好像过于简单了，就是直接利用内积得出最终结果。这会导致特征之间还没有充分交叉就直接输出结果，模型会有欠拟合的风险。针对这一弱点，NeuralCF 对矩阵分解进行了改进，它的结构图见下图">
+<meta property="og:description" content="Flink引擎与KafkaFlink是流处理框架，Kafka消息队列是最广泛使用的消息队列（JDQ、JMQ），Flink引擎通常用来处理 Kafka消息队列中的消息（Topic）； Flink 介绍 Flink 提供两种类型类型 API：DataStream API; Table API;（数据流中同样提供两种API形式做数据处理，并提供可以进行转换的算子进行不同API间算子的串联） Datast">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2023-07-31T13:59:42.000Z">
-<meta property="article:modified_time" content="2023-07-31T16:40:22.959Z">
+<meta property="article:published_time" content="2023-08-02T14:29:53.000Z">
+<meta property="article:modified_time" content="2023-08-02T15:20:14.883Z">
 <meta property="article:author" content="Sure Zheng">
-<meta property="article:tag" content="深度学习模型">
 <meta property="article:tag" content="技术学习">
+<meta property="article:tag" content="计算引擎">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://shuo-shuo.site/2023/07/31/NeuralCF/">
+<link rel="canonical" href="http://shuo-shuo.site/2023/08/02/flink%E5%BC%95%E6%93%8E%E4%B8%8E%E5%AE%9E%E6%97%B6%E6%8E%A8%E8%8D%90/">
 
 
 <script id="page-configurations">
@@ -47,7 +47,7 @@
   };
 </script>
 
-  <title>NeuralCF：如何用深度学习改造协同过滤？ | Sure's BLOG</title>
+  <title>Flink 引擎与实时推荐 | Sure's BLOG</title>
   
 
 
@@ -172,7 +172,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2023/07/31/NeuralCF/">
+    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2023/08/02/flink%E5%BC%95%E6%93%8E%E4%B8%8E%E5%AE%9E%E6%97%B6%E6%8E%A8%E8%8D%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -185,7 +185,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          NeuralCF：如何用深度学习改造协同过滤？
+          Flink 引擎与实时推荐
         </h1>
 
         <div class="post-meta">
@@ -194,16 +194,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2023-07-31 21:59:42" itemprop="dateCreated datePublished" datetime="2023-07-31T21:59:42+08:00">2023-07-31</time>
+              <time title="Created: 2023-08-02 22:29:53 / Modified: 23:20:14" itemprop="dateCreated datePublished" datetime="2023-08-02T22:29:53+08:00">2023-08-02</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-08-01 00:40:22" itemprop="dateModified" datetime="2023-08-01T00:40:22+08:00">2023-08-01</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -211,6 +205,10 @@
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/Categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Categories/%E7%AE%97%E6%B3%95/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
                 </span>
             </span>
 
@@ -220,7 +218,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.7k</span>
+              <span>1.4k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -239,15 +237,45 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="NeuralCF-模型的结构"><a href="#NeuralCF-模型的结构" class="headerlink" title="NeuralCF 模型的结构"></a>NeuralCF 模型的结构</h1><p>把矩阵分解神经网络化之后，把它跟 Embedding+MLP 以及 Wide&amp;Deep 模型做对比，我们可以一眼看出网络中的薄弱环节：矩阵分解在 Embedding 层之上的操作好像过于简单了，就是直接利用内积得出最终结果。这会导致特征之间还没有充分交叉就直接输出结果，模型会有欠拟合的风险。针对这一弱点，NeuralCF 对矩阵分解进行了改进，它的结构图见下图</p>
-<h1 id="NeuralCF-模型的扩展，双塔模型"><a href="#NeuralCF-模型的扩展，双塔模型" class="headerlink" title="NeuralCF 模型的扩展，双塔模型"></a>NeuralCF 模型的扩展，双塔模型</h1><p>有了之前实现矩阵分解和深度学习模型的经验，我想你理解起来 NeuralCF 肯定不会有困难。事实上，NeuralCF 的模型结构之中，蕴含了一个非常有价值的思想，就是我们可以把模型分成用户侧模型和物品侧模型两部分，然后用互操作层把这两部分联合起来，产生最后的预测得分。</p>
-<p>这里的用户侧模型结构和物品侧模型结构，可以是简单的 Embedding 层，也可以是复杂的神经网络结构，最后的互操作层可以是简单的点积操作，也可以是比较复杂的 MLP 结构。但只要是这种物品侧模型 + 用户侧模型 + 互操作层的模型结构，我们把它统称为“双塔模型”结构。</p>
-<p>图 4 就是一个典型“双塔模型”的抽象结构。它的名字形象地解释了它的结构组成，两侧的模型结构就像两个高塔一样，而最上面的互操作层则像两个塔尖搭建起的空中走廊，负责两侧信息的沟通。</p>
-<p>对于 NerualCF 来说，它只利用了用户 ID 作为“用户塔”的输入特征，用物品 ID 作为“物品塔”的输入特征。事实上，我们完全可以把其他用户和物品相关的特征也分别放入用户塔和物品塔，让模型能够学到的信息更全面。比如说，YouTube 在构建用于召回层的双塔模型时，就分别在用户侧和物品侧输入了多种不同的特征，如图 5 所示。</p>
-<h1 id="NeuralCF-的-TensorFlow-实现"><a href="#NeuralCF-的-TensorFlow-实现" class="headerlink" title="NeuralCF 的 TensorFlow 实现"></a>NeuralCF 的 TensorFlow 实现</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># neural cf model arch two. only embedding in each tower, then MLP as the interaction layers</span></span><br><span class="line">def neural_cf_model_1(feature_inputs, item_feature_columns, user_feature_columns, hidden_units):</span><br><span class="line">    <span class="comment"># 物品侧特征层</span></span><br><span class="line">    item_tower = tf.keras.layers.DenseFeatures(item_feature_columns)(feature_inputs)</span><br><span class="line">    <span class="comment"># 用户侧特征层</span></span><br><span class="line">    user_tower = tf.keras.layers.DenseFeatures(user_feature_columns)(feature_inputs)</span><br><span class="line">    <span class="comment"># 连接层及后续多层神经网络</span></span><br><span class="line">    interact_layer = tf.keras.layers.concatenate([item_tower, user_tower])</span><br><span class="line">    <span class="keyword">for</span> num_nodes <span class="keyword">in</span> hidden_units:</span><br><span class="line">        interact_layer = tf.keras.layers.Dense(num_nodes, activation=<span class="string">&#x27;relu&#x27;</span>)(interact_layer)</span><br><span class="line">    <span class="comment"># sigmoid单神经元输出层</span></span><br><span class="line">    output_layer = tf.keras.layers.Dense(1, activation=<span class="string">&#x27;sigmoid&#x27;</span>)(interact_layer)</span><br><span class="line">    <span class="comment"># 定义keras模型</span></span><br><span class="line">    neural_cf_model = tf.keras.Model(feature_inputs, output_layer)</span><br><span class="line">    <span class="built_in">return</span> neural_cf_model</span><br></pre></td></tr></table></figure>
+        <h1 id="Flink引擎与Kafka"><a href="#Flink引擎与Kafka" class="headerlink" title="Flink引擎与Kafka"></a>Flink引擎与Kafka</h1><p>Flink是流处理框架，Kafka消息队列是最广泛使用的消息队列（JDQ、JMQ），Flink引擎通常用来处理 Kafka消息队列中的消息（Topic）；</p>
+<h2 id="Flink-介绍"><a href="#Flink-介绍" class="headerlink" title="Flink 介绍"></a>Flink 介绍</h2><ul>
+<li>Flink 提供两种类型类型 API：<strong>DataStream API</strong>; <strong>Table API</strong>;（数据流中同样提供两种API形式做数据处理，并提供可以进行转换的算子进行不同API间算子的串联）</li>
+<li>Datastream API 和 Table API 不相互依赖，可以混合使用</li>
+<li>支持流处理和批处理</li>
+<li>容错机制完善，提供checkpoint和statebackends（状态存储）功能</li>
+<li>共享槽位组，可以实现资源隔离（线程上隔离）</li>
+<li>支持并行度设置，客户端执行预处理并转换为并行数据流形式，由TM和JM来执行</li>
+</ul>
+<h2 id="重要特性"><a href="#重要特性" class="headerlink" title="重要特性"></a>重要特性</h2><h3 id="支持窗口类型"><a href="#支持窗口类型" class="headerlink" title="支持窗口类型"></a>支持窗口类型</h3><ul>
+<li>滑动窗口，移动窗口，移动window slile, window_slide &lt; window_size</li>
+<li>滚动窗口，window_slide = 0时的窗口</li>
+<li>会话窗口和全局窗口用的不多<br>Flink 按照时间窗口（window）来处理流数据，把缓存在内存中数据进行批处理。通过连接曝光数据和点击数据，计算 CTR。<h3 id="问题？分割两个窗口怎么办？"><a href="#问题？分割两个窗口怎么办？" class="headerlink" title="问题？分割两个窗口怎么办？"></a>问题？分割两个窗口怎么办？</h3>滑动窗口提供给两窗口时间间隔足够时间做 Join，避免数据遗漏</li>
+</ul>
+<h3 id="支持有状态流"><a href="#支持有状态流" class="headerlink" title="支持有状态流"></a>支持有状态流</h3><h2 id="Kafka-介绍"><a href="#Kafka-介绍" class="headerlink" title="Kafka 介绍"></a>Kafka 介绍</h2><ul>
+<li><strong>分布式的</strong>、<strong>多副本</strong>，基于 Zookeeper 的分布式消息流平台</li>
+<li>多用于提交日志从而做全链路分析、流量跟踪（点击流）从而做推荐、实时监控</li>
+<li>支持消息压缩，支持LZ4、snappy等格式的消息压缩</li>
+</ul>
+<h3 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h3><ul>
+<li>高吞吐，10几万条消息/s</li>
+<li>高伸缩，每个主题包含多个 partition</li>
+<li>容错性，集群中某个节点失败，Kafka集群可以正常工作</li>
+<li>支持设置检查点，可以从停止时的检查点重新启动</li>
+<li>支持重置位点功能，可以从指定位点进行消费</li>
+<li>提供多消费者、生产者、broker（独立Kafka服务器）</li>
+</ul>
+<h2 id="Flink批流一体Kappa架构浅谈"><a href="#Flink批流一体Kappa架构浅谈" class="headerlink" title="Flink批流一体Kappa架构浅谈"></a>Flink批流一体Kappa架构浅谈</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>无存储系统，运行速度快</li>
+<li>增加数据重播功能，数据落盘后进行落盘数据处理，保证代码维护一致性</li>
+</ul>
+<h3 id="难点"><a href="#难点" class="headerlink" title="难点"></a>难点</h3><ul>
+<li>已构造数据体系</li>
+<li>批流一体难以共享一套代码，复杂特征（用户观看视频的百分比）</li>
+<li>数据时间跨度大、计算复杂，难以实现</li>
+</ul>
+<h2 id="实操"><a href="#实操" class="headerlink" title="实操"></a>实操</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">DataStream&lt;Rating&gt; ratingStream = inputStream.map(Rating::new);</span><br><span class="line">ratingStream.keyBy(rating -&gt; rating.userId)</span><br><span class="line">        .timeWindow(Time.seconds(1))</span><br><span class="line">        .reduce(</span><br><span class="line">                (ReduceFunction&lt;Rating&gt;) (rating, t1) -&gt; &#123;</span><br><span class="line">                    <span class="keyword">if</span> (rating.timestamp.compareTo(t1.timestamp) &gt; 0)&#123;</span><br><span class="line">                        <span class="built_in">return</span> rating;</span><br><span class="line">                    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                        <span class="built_in">return</span> t1;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">        ).addSink(new SinkFunction&lt;Rating&gt;() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void invoke(Rating value, Context context) &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;userId:&quot;</span> + value.userId + <span class="string">&quot;\tlatestMovieId:&quot;</span> + value.latestMovieId);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
-<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>利用 NerualCF 的思想，我们进一步学习了双塔模型。它通过丰富物品侧和用户侧的特征，让模型能够融入除了用户 ID 和物品 ID 外更丰富的信息。除此之外，双塔模型最大的优势在于模型服务的便捷性，由于最终的互操作层是简单的内积操作或浅层神经网络。因此，我们可以把物品塔的输出当作物品 Embedding，用户塔的输出当作用户 Embedding 存入特征数据库，在线上只要实现简单的互操作过程就可以了。</p>
-
+<h1 id="Flink引擎搭建实时数仓"><a href="#Flink引擎搭建实时数仓" class="headerlink" title="Flink引擎搭建实时数仓"></a>Flink引擎搭建实时数仓</h1>
     </div>
 
     
@@ -276,8 +304,8 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A8%A1%E5%9E%8B/" rel="tag"><i class="fa fa-tag"></i> 深度学习模型</a>
               <a href="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 技术学习</a>
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E/" rel="tag"><i class="fa fa-tag"></i> 计算引擎</a>
           </div>
 
         
@@ -285,10 +313,13 @@
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2023/08/01/redis%E5%92%8C%E6%A8%A1%E5%9E%8B%E6%9C%8D%E5%8A%A1/" rel="next" title="Redis和模型服务">
-      Redis和模型服务 <i class="fa fa-chevron-right"></i>
+    <a href="/2023/08/01/redis%E5%92%8C%E6%A8%A1%E5%9E%8B%E6%9C%8D%E5%8A%A1/" rel="prev" title="Redis和模型服务">
+      <i class="fa fa-chevron-left"></i> Redis和模型服务
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/08/02/Spark%E5%BC%95%E6%93%8E%E4%B8%8E%E6%89%B9%E5%A4%84%E7%90%86%E6%9E%B6%E6%9E%84/" rel="next" title="Spark引擎与批处理架构">
+      Spark引擎与批处理架构 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -348,7 +379,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#NeuralCF-%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">NeuralCF 模型的结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NeuralCF-%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%89%A9%E5%B1%95%EF%BC%8C%E5%8F%8C%E5%A1%94%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">NeuralCF 模型的扩展，双塔模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NeuralCF-%E7%9A%84-TensorFlow-%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">NeuralCF 的 TensorFlow 实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Flink%E5%BC%95%E6%93%8E%E4%B8%8EKafka"><span class="nav-number">1.</span> <span class="nav-text">Flink引擎与Kafka</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Flink-%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.1.</span> <span class="nav-text">Flink 介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E8%A6%81%E7%89%B9%E6%80%A7"><span class="nav-number">1.2.</span> <span class="nav-text">重要特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%AF%E6%8C%81%E7%AA%97%E5%8F%A3%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.1.</span> <span class="nav-text">支持窗口类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%EF%BC%9F%E5%88%86%E5%89%B2%E4%B8%A4%E4%B8%AA%E7%AA%97%E5%8F%A3%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F"><span class="nav-number">1.2.2.</span> <span class="nav-text">问题？分割两个窗口怎么办？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%AF%E6%8C%81%E6%9C%89%E7%8A%B6%E6%80%81%E6%B5%81"><span class="nav-number">1.2.3.</span> <span class="nav-text">支持有状态流</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka-%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.3.</span> <span class="nav-text">Kafka 介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E6%80%A7"><span class="nav-number">1.3.1.</span> <span class="nav-text">特性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flink%E6%89%B9%E6%B5%81%E4%B8%80%E4%BD%93Kappa%E6%9E%B6%E6%9E%84%E6%B5%85%E8%B0%88"><span class="nav-number">1.4.</span> <span class="nav-text">Flink批流一体Kappa架构浅谈</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E7%82%B9"><span class="nav-number">1.4.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%BE%E7%82%B9"><span class="nav-number">1.4.2.</span> <span class="nav-text">难点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%93%8D"><span class="nav-number">1.5.</span> <span class="nav-text">实操</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Flink%E5%BC%95%E6%93%8E%E6%90%AD%E5%BB%BA%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93"><span class="nav-number">2.</span> <span class="nav-text">Flink引擎搭建实时数仓</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
