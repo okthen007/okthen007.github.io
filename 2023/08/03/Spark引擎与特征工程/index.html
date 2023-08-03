@@ -20,28 +20,34 @@
     var CONFIG = {"hostname":"shuo-shuo.site","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Sure&#39;s BLOG">
-<meta property="og:url" content="http://shuo-shuo.site/index.html">
+  <meta name="description" content="Spark引擎与大数据分布式计算平台（通过网络通信交换数据）  架构：manager node：调度组织；worker node：调度执行，结果返回给 Driver Stage内：计算节点并行工作：主机、docker container；map&#x2F;filter 需要逐条数据处理，可以并行处理 Stage 外：join 需要shuffle&#x2F;reduce，消耗资源，shuffle汇总统计结果 -&gt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spark引擎与特征工程">
+<meta property="og:url" content="http://shuo-shuo.site/2023/08/03/Spark%E5%BC%95%E6%93%8E%E4%B8%8E%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B/index.html">
 <meta property="og:site_name" content="Sure&#39;s BLOG">
+<meta property="og:description" content="Spark引擎与大数据分布式计算平台（通过网络通信交换数据）  架构：manager node：调度组织；worker node：调度执行，结果返回给 Driver Stage内：计算节点并行工作：主机、docker container；map&#x2F;filter 需要逐条数据处理，可以并行处理 Stage 外：join 需要shuffle&#x2F;reduce，消耗资源，shuffle汇总统计结果 -&gt;">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-08-03T13:48:25.000Z">
+<meta property="article:modified_time" content="2023-08-03T14:58:42.310Z">
 <meta property="article:author" content="Sure Zheng">
+<meta property="article:tag" content="技术学习">
+<meta property="article:tag" content="计算引擎">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://shuo-shuo.site/">
+<link rel="canonical" href="http://shuo-shuo.site/2023/08/03/Spark%E5%BC%95%E6%93%8E%E4%B8%8E%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Sure's BLOG</title>
+  <title>Spark引擎与特征工程 | Sure's BLOG</title>
   
 
 
@@ -159,9 +165,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
@@ -177,10 +184,9 @@
       <meta itemprop="name" content="Sure's BLOG">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/03/Spark%E5%BC%95%E6%93%8E%E4%B8%8E%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B/" class="post-title-link" itemprop="url">Spark引擎与特征工程</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          Spark引擎与特征工程
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -231,7 +237,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="Spark引擎与大数据"><a href="#Spark引擎与大数据" class="headerlink" title="Spark引擎与大数据"></a>Spark引擎与大数据</h1><p>分布式计算平台（通过网络通信交换数据）</p>
+        <h1 id="Spark引擎与大数据"><a href="#Spark引擎与大数据" class="headerlink" title="Spark引擎与大数据"></a>Spark引擎与大数据</h1><p>分布式计算平台（通过网络通信交换数据）</p>
 <ul>
 <li>架构：manager node：调度组织；worker node：调度执行，结果返回给 Driver</li>
 <li>Stage内：计算节点并行工作：主机、docker container；<br>map/filter 需要逐条数据处理，可以并行处理</li>
@@ -284,384 +290,54 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">//随机游走采样函数</span><br><span class="line">//transferMatrix 转移概率矩阵</span><br><span class="line">//itemCount 物品出现次数的分布</span><br><span class="line">def randomWalk(transferMatrix : scala.collection.mutable.Map[String, scala.collection.mutable.Map[String, Long]], itemCount : scala.collection.mutable.Map[String, Long]): Seq[Seq[String]] =&#123;</span><br><span class="line">  //样本的数量</span><br><span class="line">  val sampleCount = 20000</span><br><span class="line">  //每个样本的长度</span><br><span class="line">  val sampleLength = 10</span><br><span class="line">  val samples = scala.collection.mutable.ListBuffer[Seq[String]]()</span><br><span class="line">  </span><br><span class="line">  //物品出现的总次数</span><br><span class="line">  var itemTotalCount:Long = 0</span><br><span class="line">  <span class="keyword">for</span> ((k,v) &lt;- itemCount) itemTotalCount += v</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  //随机游走sampleCount次，生成sampleCount个序列样本</span><br><span class="line">  for( w &lt;- <span class="number">1</span> to sampleCount) &#123;</span><br><span class="line">    samples.append(oneRandomWalk(transferMatrix, itemCount, itemTotalCount, sampleLength))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  Seq(samples.toList : _*)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//通过随机游走产生一个样本的过程</span><br><span class="line">//transferMatrix 转移概率矩阵</span><br><span class="line">//itemCount 物品出现次数的分布</span><br><span class="line">//itemTotalCount 物品出现总次数</span><br><span class="line">//sampleLength 每个样本的长度</span><br><span class="line">def oneRandomWalk(transferMatrix : scala.collection.mutable.Map[String, scala.collection.mutable.Map[String, Long]], itemCount : scala.collection.mutable.Map[String, Long], itemTotalCount:Long, sampleLength:Int): Seq[String] =&#123;</span><br><span class="line">  val sample = scala.collection.mutable.ListBuffer[String]()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  //决定起始点</span><br><span class="line">  val randomDouble = Random.nextDouble()</span><br><span class="line">  var firstElement = <span class="string">&quot;&quot;</span></span><br><span class="line">  var culCount:Long = 0</span><br><span class="line">  //根据物品出现的概率，随机决定起始点</span><br><span class="line">  breakable &#123; <span class="keyword">for</span> ((item, count) &lt;- itemCount) &#123;</span><br><span class="line">    culCount += count</span><br><span class="line">    if (culCount &gt;= randomDouble * itemTotalCount)&#123;</span><br><span class="line">      firstElement = item</span><br><span class="line">      break</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  sample.append(firstElement)</span><br><span class="line">  var curElement = firstElement</span><br><span class="line">  //通过随机游走产生长度为sampleLength的样本</span><br><span class="line">  breakable &#123; for( w &lt;- <span class="number">1</span> until sampleLength) &#123;</span><br><span class="line">    if (!itemCount.contains(curElement) || !transferMatrix.contains(curElement))&#123;</span><br><span class="line">      <span class="built_in">break</span></span><br><span class="line">    &#125;</span><br><span class="line">    //从curElement到下一个跳的转移概率向量</span><br><span class="line">    val probDistribution = transferMatrix(curElement)</span><br><span class="line">    val curCount = itemCount(curElement)</span><br><span class="line">    val randomDouble = Random.nextDouble()</span><br><span class="line">    var culCount:Long = 0</span><br><span class="line">    //根据转移概率向量随机决定下一跳的物品</span><br><span class="line">    breakable &#123; <span class="keyword">for</span> ((item, count) &lt;- probDistribution) &#123;</span><br><span class="line">      culCount += count</span><br><span class="line">      if (culCount &gt;= randomDouble * curCount)&#123;</span><br><span class="line">        curElement = item</span><br><span class="line">        break</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;&#125;</span><br><span class="line">    sample.append(curElement)</span><br><span class="line">  &#125;&#125;</span><br><span class="line">  Seq(sample.toList : _</span><br></pre></td></tr></table></figure>
 
 
-      
     </div>
 
     
     
     
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+        
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2023/08/02/flink%E5%BC%95%E6%93%8E%E4%B8%8E%E5%AE%9E%E6%97%B6%E6%8E%A8%E8%8D%90/">
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Sure Zheng">
-      <meta itemprop="description" content="">
-    </span>
+    <div class="social-list">
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sure's BLOG">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/02/flink%E5%BC%95%E6%93%8E%E4%B8%8E%E5%AE%9E%E6%97%B6%E6%8E%A8%E8%8D%90/" class="post-title-link" itemprop="url">Flink 引擎与实时推荐</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-08-02 22:29:53" itemprop="dateCreated datePublished" datetime="2023-08-02T22:29:53+08:00">2023-08-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-08-03 22:48:28" itemprop="dateModified" datetime="2023-08-03T22:48:28+08:00">2023-08-03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Categories/%E7%AE%97%E6%B3%95/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
-                </span>
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://twitter.com/username">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
             </span>
 
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.5k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>3 mins.</span>
-            </span>
-
+            <span class="label">Twitter</span>
+          </a>
         </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Flink引擎与Kafka"><a href="#Flink引擎与Kafka" class="headerlink" title="Flink引擎与Kafka"></a>Flink引擎与Kafka</h1><p>Flink是流处理框架，Kafka消息队列是最广泛使用的消息队列（JDQ、JMQ），Flink引擎通常用来处理 Kafka消息队列中的消息（Topic）；</p>
-<h2 id="Flink-介绍"><a href="#Flink-介绍" class="headerlink" title="Flink 介绍"></a>Flink 介绍</h2><ul>
-<li>Flink 提供两种类型类型 API：<strong>DataStream API</strong>; <strong>Table API</strong>;（数据流中同样提供两种API形式做数据处理，并提供可以进行转换的算子进行不同API间算子的串联）</li>
-<li>Datastream API 和 Table API 不相互依赖，可以混合使用</li>
-<li>支持流处理和批处理</li>
-<li>共享槽位组，可以实现资源隔离（Java 线程上隔离）</li>
-<li>支持并行度设置，客户端执行预处理并转换为并行数据流形式，由TM和JM来执行</li>
-</ul>
-<h2 id="重要特性"><a href="#重要特性" class="headerlink" title="重要特性"></a>重要特性</h2><h3 id="支持窗口类型"><a href="#支持窗口类型" class="headerlink" title="支持窗口类型"></a>支持窗口类型</h3><ul>
-<li>滑动窗口，移动窗口，移动window slile, window_slide &lt; window_size</li>
-<li>滚动窗口，window_slide = 0时的窗口</li>
-<li>会话窗口和全局窗口用的不多<br>Flink 按照时间窗口（window）来处理流数据，把缓存在内存中数据进行批处理。通过连接曝光数据和点击数据，计算 CTR。<h3 id="问题？分割两个窗口怎么办？"><a href="#问题？分割两个窗口怎么办？" class="headerlink" title="问题？分割两个窗口怎么办？"></a>问题？分割两个窗口怎么办？</h3>滑动窗口提供给两窗口时间间隔足够时间做 Join，避免数据遗漏</li>
-</ul>
-<h3 id="支持有状态流"><a href="#支持有状态流" class="headerlink" title="支持有状态流"></a>支持有状态流</h3><ul>
-<li>容错机制完善，提供checkpoint和statebackends（状态存储）功能</li>
-<li>提供 memory、filesystem、rocksDB三种类型的状态存储机制</li>
-</ul>
-<h2 id="Kafka-介绍"><a href="#Kafka-介绍" class="headerlink" title="Kafka 介绍"></a>Kafka 介绍</h2><ul>
-<li><strong>分布式的</strong>、<strong>多副本</strong>，基于 Zookeeper 的分布式消息流平台</li>
-<li>多用于提交日志从而做全链路分析、流量跟踪（点击流）从而做推荐、实时监控</li>
-<li>支持消息压缩，支持LZ4、snappy等格式</li>
-</ul>
-<h3 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h3><ul>
-<li>高吞吐，10几万条消息/s</li>
-<li>高伸缩，每个主题包含多个 partition</li>
-<li>容错性，集群中某个节点失败，Kafka集群可以正常工作</li>
-<li>支持设置检查点，可以从停止时的检查点重新启动</li>
-<li>支持重置位点功能，可以从指定位点进行消费</li>
-<li>提供多消费者、生产者、broker（独立Kafka服务器，域名+端口号）</li>
-</ul>
-<h2 id="Flink批流一体Kappa架构浅谈"><a href="#Flink批流一体Kappa架构浅谈" class="headerlink" title="Flink批流一体Kappa架构浅谈"></a>Flink批流一体Kappa架构浅谈</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
-<li>无存储系统，运行速度快</li>
-<li>增加数据重播功能，数据落盘后进行落盘数据处理，保证代码维护一致性</li>
-</ul>
-<h3 id="难点"><a href="#难点" class="headerlink" title="难点"></a>难点</h3><ul>
-<li>已构造数据体系</li>
-<li>批流一体难以共享一套代码，复杂特征（用户观看视频的百分比）</li>
-<li>数据时间跨度大、计算复杂，难以实现</li>
-</ul>
-<h2 id="实操"><a href="#实操" class="headerlink" title="实操"></a>实操</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">DataStream&lt;Rating&gt; ratingStream = inputStream.map(Rating::new);</span><br><span class="line">ratingStream.keyBy(rating -&gt; rating.userId)</span><br><span class="line">        .timeWindow(Time.seconds(1))</span><br><span class="line">        .reduce(</span><br><span class="line">                (ReduceFunction&lt;Rating&gt;) (rating, t1) -&gt; &#123;</span><br><span class="line">                    <span class="keyword">if</span> (rating.timestamp.compareTo(t1.timestamp) &gt; 0)&#123;</span><br><span class="line">                        <span class="built_in">return</span> rating;</span><br><span class="line">                    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                        <span class="built_in">return</span> t1;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">        ).addSink(new SinkFunction&lt;Rating&gt;() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void invoke(Rating value, Context context) &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;userId:&quot;</span> + value.userId + <span class="string">&quot;\tlatestMovieId:&quot;</span> + value.latestMovieId);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h1 id="Flink引擎搭建实时数仓"><a href="#Flink引擎搭建实时数仓" class="headerlink" title="Flink引擎搭建实时数仓"></a>Flink引擎搭建实时数仓</h1><p><a target="_blank" rel="noopener" href="https://tech.meituan.com/2021/08/26/data-warehouse-in-meituan-waimai.html">美团基于 Flink 的实时数仓建设实践</a></p>
-
-      
     </div>
+  </div>
 
-    
-    
-    
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2023/08/01/redis%E5%92%8C%E6%A8%A1%E5%9E%8B%E6%9C%8D%E5%8A%A1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Sure Zheng">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sure's BLOG">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/08/01/redis%E5%92%8C%E6%A8%A1%E5%9E%8B%E6%9C%8D%E5%8A%A1/" class="post-title-link" itemprop="url">Redis和模型服务</a>
-        </h2>
+          <div class="post-tags">
+              <a href="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 技术学习</a>
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E/" rel="tag"><i class="fa fa-tag"></i> 计算引擎</a>
+          </div>
 
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
+        
 
-              <time title="Created: 2023-08-01 23:07:48" itemprop="dateCreated datePublished" datetime="2023-08-01T23:07:48+08:00">2023-08-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-08-02 23:29:28" itemprop="dateModified" datetime="2023-08-02T23:29:28+08:00">2023-08-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
-                </span>
-            </span>
 
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>4.2k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>8 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Redis数据库-JimDB数据库"><a href="#Redis数据库-JimDB数据库" class="headerlink" title="Redis数据库 (JimDB数据库)"></a>Redis数据库 (JimDB数据库)</h1><h2 id="同其他kv数据库比较，Redis数据库优势："><a href="#同其他kv数据库比较，Redis数据库优势：" class="headerlink" title="同其他kv数据库比较，Redis数据库优势："></a>同其他kv数据库比较，Redis数据库优势：</h2><ul>
-<li>运行在内存中，支持数据持久化，磁盘在恢复数据时有作用</li>
-<li>支持 master-slave模式数据备份</li>
-<li>支持秒级过期时间</li>
-<li>key只支持字符串；value支持多数据结构存储，eg. string, list, set, zset（有序集合）, hash</li>
-<li>支持事务，操作原子性</li>
-</ul>
-<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><ul>
-<li>set, 用于标签服务查询</li>
-<li>用于特征服务查询</li>
-<li>list, 用于服务器缓存（后端系统）</li>
-<li>zset, 排行榜</li>
-<li>hash, 存储、读取、修改用户属性</li>
-</ul>
-<h3 id="存储数据实操"><a href="#存储数据实操" class="headerlink" title="存储数据实操"></a>存储数据实操</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (saveToRedis) &#123;</span><br><span class="line">  //创建redis client</span><br><span class="line">  val redisClient = new Jedis(redisEndpoint, redisPort)</span><br><span class="line">  val params = SetParams.setParams()</span><br><span class="line">  //设置ttl过期时间为24小时</span><br><span class="line">  params.ex(60 * 60 * 24)</span><br><span class="line">  //遍历存储embedding向量</span><br><span class="line">  <span class="keyword">for</span> (movieId &lt;- model.getVectors.keys) &#123;</span><br><span class="line">    //key的形式为前缀+movieId，例如i2vEmb:361</span><br><span class="line">    //value的形式是由Embedding向量生成的字符串，例如 <span class="string">&quot;0.1693846 0.2964318 -0.13044095 0.37574086 0.55175656 0.03217995 1.327348 -0.81346786 0.45146862 0.49406642&quot;</span></span><br><span class="line">    redisClient.<span class="built_in">set</span>(redisKeyPrefix + <span class="string">&quot;:&quot;</span> + movieId, model.getVectors(movieId).mkString(<span class="string">&quot; &quot;</span>), params)</span><br><span class="line">  &#125;</span><br><span class="line">  //关闭客户端连接</span><br><span class="line">  redisClient.close()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="线上服务与推荐系统"><a href="#线上服务与推荐系统" class="headerlink" title="线上服务与推荐系统"></a>线上服务与推荐系统</h1><h2 id="高并发推荐结构"><a href="#高并发推荐结构" class="headerlink" title="高并发推荐结构"></a>高并发推荐结构</h2><h3 id="负载均衡，提升服务能力"><a href="#负载均衡，提升服务能力" class="headerlink" title="负载均衡，提升服务能力"></a>负载均衡，提升服务能力</h3><p>是高并发的基础，需要增加服务器来分配节点，“负载均衡服务器” 来分配不同服务器，采用高效 Nginx作为技术选型</p>
-<h3 id="缓存，降低服务压力"><a href="#缓存，降低服务压力" class="headerlink" title="缓存，降低服务压力"></a>缓存，降低服务压力</h3><ul>
-<li>增加缓存列表，同一用户多次请求</li>
-<li>新用户请求，从缓存列表中选择</li>
-</ul>
-<h3 id="服务降级"><a href="#服务降级" class="headerlink" title="服务降级"></a>服务降级</h3><ul>
-<li>采用最简单将降级服务</li>
-<li>缓存/内存中，产生推荐结果</li>
-</ul>
-<h1 id="搭建存储模块"><a href="#搭建存储模块" class="headerlink" title="搭建存储模块"></a>搭建存储模块</h1><h2 id="特征分级存储"><a href="#特征分级存储" class="headerlink" title="特征分级存储"></a>特征分级存储</h2><ul>
-<li>Cassandra（Nosql）高QPS 需求（JD场景：Hbase）</li>
-<li>Redis（JimDB）</li>
-<li>内存</li>
-<li>Mysql存储强一致性信息, eg. 物品是否可以被推荐这种控制类的信息，物品分类的层级关系，用户的注册信息</li>
-</ul>
-<h2 id="存储模块设计"><a href="#存储模块设计" class="headerlink" title="存储模块设计"></a>存储模块设计</h2><ul>
-<li>HDFS，保存全量的离线特征和模型数据</li>
-<li>Redis，保存线上所需特征和模型数据</li>
-<li>服务器内存，缓存频繁访问的特征</li>
-</ul>
-<h1 id="搭建线上服务实操"><a href="#搭建线上服务实操" class="headerlink" title="搭建线上服务实操"></a>搭建线上服务实操</h1><h2 id="选择服务器技术框架"><a href="#选择服务器技术框架" class="headerlink" title="选择服务器技术框架"></a>选择服务器技术框架</h2><ul>
-<li>嵌入式Java框架服务器Jetty</li>
-<li>Tomcat适合搭建于工程项目</li>
-<li>NodeJS</li>
-<li>python</li>
-<li>C++</li>
-<li>Go</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">public class RecSysServer &#123;</span><br><span class="line">    //主函数，创建推荐服务器并运行</span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        new RecSysServer().run();</span><br><span class="line">    &#125;</span><br><span class="line">    //推荐服务器的默认服务端口6010</span><br><span class="line">    private static final int DEFAULT_PORT = 6010;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    //运行推荐服务器的函数</span><br><span class="line">    public void run() throws Exception&#123;</span><br><span class="line">        int port = DEFAULT_PORT;</span><br><span class="line">        //绑定IP地址和端口，0.0.0.0代表本地运行</span><br><span class="line">        InetSocketAddress inetAddress = new InetSocketAddress(<span class="string">&quot;0.0.0.0&quot;</span>, port);</span><br><span class="line">        //创建Jetty服务器</span><br><span class="line">        Server server = new Server(inetAddress);</span><br><span class="line">        //创建Jetty服务器的环境handler</span><br><span class="line">        ServletContextHandler context = new ServletContextHandler();</span><br><span class="line">        context.setContextPath(<span class="string">&quot;/&quot;</span>);</span><br><span class="line">        context.setWelcomeFiles(new String[] &#123; <span class="string">&quot;index.html&quot;</span> &#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        //添加API，getMovie，获取电影相关数据</span><br><span class="line">        context.addServlet(new ServletHolder(new MovieService()), <span class="string">&quot;/getmovie&quot;</span>);</span><br><span class="line">        //添加API，getuser，获取用户相关数据</span><br><span class="line">        context.addServlet(new ServletHolder(new UserService()), <span class="string">&quot;/getuser&quot;</span>);</span><br><span class="line">        //添加API，getsimilarmovie，获取相似电影推荐</span><br><span class="line">        context.addServlet(new ServletHolder(new SimilarMovieService()), <span class="string">&quot;/getsimilarmovie&quot;</span>);</span><br><span class="line">        //添加API，getrecommendation，获取各类电影推荐</span><br><span class="line">        context.addServlet(new ServletHolder(new RecommendationService()), <span class="string">&quot;/getrecommendation&quot;</span>);</span><br><span class="line">        //设置Jetty的环境handler</span><br><span class="line">        server.setHandler(context);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        //启动Jetty服务器</span><br><span class="line">        server.start();</span><br><span class="line">        server.join();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>接口调用</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost:6010/getmovie?<span class="built_in">id</span>=1</span><br></pre></td></tr></table></figure>
-<p>返回值</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&quot;movieId&quot;</span>:1,<span class="string">&quot;title&quot;</span>:<span class="string">&quot;Toy Story&quot;</span>,<span class="string">&quot;releaseYear&quot;</span>:1995,<span class="string">&quot;imdbId&quot;</span>:<span class="string">&quot;0114709&quot;</span>,<span class="string">&quot;tmdbId&quot;</span>:<span class="string">&quot;862&quot;</span>,<span class="string">&quot;genres&quot;</span>:[<span class="string">&quot;Adventure&quot;</span>,<span class="string">&quot;Animation&quot;</span>,<span class="string">&quot;Children&quot;</span>,<span class="string">&quot;Comedy&quot;</span>,<span class="string">&quot;Fantasy&quot;</span>],<span class="string">&quot;ratingNumber&quot;</span>:10759,<span class="string">&quot;averageRating&quot;</span>:3.9149549214611024,<span class="string">&quot;topRatings&quot;</span>:[&#123;<span class="string">&quot;rating&quot;</span>:&#123;<span class="string">&quot;movieId&quot;</span>:1,<span class="string">&quot;userId&quot;</span>:136,<span class="string">&quot;score&quot;</span>:5.0,<span class="string">&quot;timestamp&quot;</span>:1415635425&#125;&#125;,&#123;<span class="string">&quot;rating&quot;</span>:&#123;<span class="string">&quot;movieId&quot;</span>:1,<span class="string">&quot;userId&quot;</span>:124,<span class="string">&quot;score&quot;</span>:5.0,<span class="string">&quot;timestamp&quot;</span>:1134475984&#125;&#125;,&#123;<span class="string">&quot;rating&quot;</span>:&#123;<span class="string">&quot;movieId&quot;</span>:1,<span class="string">&quot;userId&quot;</span>:93,<span class="string">&quot;score&quot;</span>:5.0,<span class="string">&quot;timestamp&quot;</span>:835037871&#125;&#125;,&#123;<span class="string">&quot;rating&quot;</span>:&#123;<span class="string">&quot;movieId&quot;</span>:1,<span class="string">&quot;userId&quot;</span>:84,<span class="string">&quot;score&quot;</span>:5.0,<span class="string">&quot;timestamp&quot;</span>:832543433&#125;&#125;,&#123;<span class="string">&quot;rating&quot;</span>:&#123;<span class="string">&quot;movieId&quot;</span>:1,<span class="string">&quot;userId&quot;</span>:82,<span class="string">&quot;score&quot;</span>:5.0,<span class="string">&quot;timestamp&quot;</span>:1317331523&#125;&#125;,&#123;<span class="string">&quot;rating&quot;</span>:&#123;<span class="string">&quot;movieId&quot;</span>:1,<span class="string">&quot;userId&quot;</span>:58,<span class="string">&quot;score&quot;</span>:5.0,<span class="string">&quot;timestamp&quot;</span>:1144058408&#125;&#125;,&#123;<span class="string">&quot;rating&quot;</span>:&#123;<span class="string">&quot;movieId&quot;</span>:1,<span class="string">&quot;userId&quot;</span>:39,<span class="string">&quot;score&quot;</span>:5.0,<span class="string">&quot;timestamp&quot;</span>:859325696&#125;&#125;,&#123;<span class="string">&quot;rating&quot;</span>:&#123;<span class="string">&quot;movieId&quot;</span>:1,<span class="string">&quot;userId&quot;</span>:34,<span class="string">&quot;score&quot;</span>:5.0,<span class="string">&quot;timestamp&quot;</span>:846509445&#125;&#125;,&#123;<span class="string">&quot;rating&quot;</span>:&#123;<span class="string">&quot;movieId&quot;</span>:1,<span class="string">&quot;userId&quot;</span>:19,<span class="string">&quot;score&quot;</span>:5.0,<span class="string">&quot;timestamp&quot;</span>:855176628&#125;&#125;,&#123;<span class="string">&quot;rating&quot;</span>:&#123;<span class="string">&quot;movieId&quot;</span>:1,<span class="string">&quot;userId&quot;</span>:6,<span class="string">&quot;score&quot;</span>:5.0,<span class="string">&quot;timestamp&quot;</span>:858275452&#125;&#125;]&#125;</span><br></pre></td></tr></table></figure>
-      
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/08/02/flink%E5%BC%95%E6%93%8E%E4%B8%8E%E5%AE%9E%E6%97%B6%E6%8E%A8%E8%8D%90/" rel="prev" title="Flink 引擎与实时推荐">
+      <i class="fa fa-chevron-left"></i> Flink 引擎与实时推荐
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2023/07/31/NeuralCF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Sure Zheng">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sure's BLOG">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/07/31/NeuralCF/" class="post-title-link" itemprop="url">NeuralCF：如何用深度学习改造协同过滤？</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-07-31 21:59:42" itemprop="dateCreated datePublished" datetime="2023-07-31T21:59:42+08:00">2023-07-31</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-08-02 23:29:25" itemprop="dateModified" datetime="2023-08-02T23:29:25+08:00">2023-08-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.7k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>3 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="NeuralCF-模型的结构"><a href="#NeuralCF-模型的结构" class="headerlink" title="NeuralCF 模型的结构"></a>NeuralCF 模型的结构</h1><p>把矩阵分解神经网络化之后，把它跟 Embedding+MLP 以及 Wide&amp;Deep 模型做对比，我们可以一眼看出网络中的薄弱环节：矩阵分解在 Embedding 层之上的操作好像过于简单了，就是直接利用内积得出最终结果。这会导致特征之间还没有充分交叉就直接输出结果，模型会有欠拟合的风险。针对这一弱点，NeuralCF 对矩阵分解进行了改进，它的结构图见下图</p>
-<h1 id="NeuralCF-模型的扩展，双塔模型"><a href="#NeuralCF-模型的扩展，双塔模型" class="headerlink" title="NeuralCF 模型的扩展，双塔模型"></a>NeuralCF 模型的扩展，双塔模型</h1><p>有了之前实现矩阵分解和深度学习模型的经验，我想你理解起来 NeuralCF 肯定不会有困难。事实上，NeuralCF 的模型结构之中，蕴含了一个非常有价值的思想，就是我们可以把模型分成用户侧模型和物品侧模型两部分，然后用互操作层把这两部分联合起来，产生最后的预测得分。</p>
-<p>这里的用户侧模型结构和物品侧模型结构，可以是简单的 Embedding 层，也可以是复杂的神经网络结构，最后的互操作层可以是简单的点积操作，也可以是比较复杂的 MLP 结构。但只要是这种物品侧模型 + 用户侧模型 + 互操作层的模型结构，我们把它统称为“双塔模型”结构。</p>
-<p>图 4 就是一个典型“双塔模型”的抽象结构。它的名字形象地解释了它的结构组成，两侧的模型结构就像两个高塔一样，而最上面的互操作层则像两个塔尖搭建起的空中走廊，负责两侧信息的沟通。</p>
-<p>对于 NerualCF 来说，它只利用了用户 ID 作为“用户塔”的输入特征，用物品 ID 作为“物品塔”的输入特征。事实上，我们完全可以把其他用户和物品相关的特征也分别放入用户塔和物品塔，让模型能够学到的信息更全面。比如说，YouTube 在构建用于召回层的双塔模型时，就分别在用户侧和物品侧输入了多种不同的特征，如图 5 所示。</p>
-<h1 id="NeuralCF-的-TensorFlow-实现"><a href="#NeuralCF-的-TensorFlow-实现" class="headerlink" title="NeuralCF 的 TensorFlow 实现"></a>NeuralCF 的 TensorFlow 实现</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># neural cf model arch two. only embedding in each tower, then MLP as the interaction layers</span></span><br><span class="line">def neural_cf_model_1(feature_inputs, item_feature_columns, user_feature_columns, hidden_units):</span><br><span class="line">    <span class="comment"># 物品侧特征层</span></span><br><span class="line">    item_tower = tf.keras.layers.DenseFeatures(item_feature_columns)(feature_inputs)</span><br><span class="line">    <span class="comment"># 用户侧特征层</span></span><br><span class="line">    user_tower = tf.keras.layers.DenseFeatures(user_feature_columns)(feature_inputs)</span><br><span class="line">    <span class="comment"># 连接层及后续多层神经网络</span></span><br><span class="line">    interact_layer = tf.keras.layers.concatenate([item_tower, user_tower])</span><br><span class="line">    <span class="keyword">for</span> num_nodes <span class="keyword">in</span> hidden_units:</span><br><span class="line">        interact_layer = tf.keras.layers.Dense(num_nodes, activation=<span class="string">&#x27;relu&#x27;</span>)(interact_layer)</span><br><span class="line">    <span class="comment"># sigmoid单神经元输出层</span></span><br><span class="line">    output_layer = tf.keras.layers.Dense(1, activation=<span class="string">&#x27;sigmoid&#x27;</span>)(interact_layer)</span><br><span class="line">    <span class="comment"># 定义keras模型</span></span><br><span class="line">    neural_cf_model = tf.keras.Model(feature_inputs, output_layer)</span><br><span class="line">    <span class="built_in">return</span> neural_cf_model</span><br></pre></td></tr></table></figure>
-
-<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>利用 NerualCF 的思想，我们进一步学习了双塔模型。它通过丰富物品侧和用户侧的特征，让模型能够融入除了用户 ID 和物品 ID 外更丰富的信息。除此之外，双塔模型最大的优势在于模型服务的便捷性，由于最终的互操作层是简单的内积操作或浅层神经网络。因此，我们可以把物品塔的输出当作物品 Embedding，用户塔的输出当作用户 Embedding 存入特征数据库，在线上只要实现简单的互操作过程就可以了。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
   
 
 
@@ -714,6 +390,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Spark%E5%BC%95%E6%93%8E%E4%B8%8E%E5%A4%A7%E6%95%B0%E6%8D%AE"><span class="nav-number">1.</span> <span class="nav-text">Spark引擎与大数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spark%E7%9A%84%E4%B8%89%E7%A7%8D%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.1.</span> <span class="nav-text">Spark的三种模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spark%E7%9A%84%E7%89%B9%E6%80%A7"><span class="nav-number">1.2.</span> <span class="nav-text">Spark的特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spark-%E8%B0%83%E4%BC%98"><span class="nav-number">1.3.</span> <span class="nav-text">Spark 调优</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spark%E4%B8%8EBroadcast"><span class="nav-number">1.3.1.</span> <span class="nav-text">Spark与Broadcast</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spark%E4%B8%8E%E7%B4%AF%E5%8A%A0%E5%99%A8"><span class="nav-number">1.3.2.</span> <span class="nav-text">Spark与累加器</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spark%E5%A4%84%E7%90%86%E4%B8%8E%E7%89%B9%E5%BE%81%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">Spark处理与特征类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E5%88%AB%E5%9E%8B%E7%89%B9%E5%BE%81"><span class="nav-number">2.1.</span> <span class="nav-text">类别型特征</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E5%80%BC%E5%9E%8B%E7%89%B9%E5%BE%81"><span class="nav-number">2.2.</span> <span class="nav-text">数值型特征</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#onehot%E7%BC%96%E7%A0%81%E5%AE%9E%E6%93%8D"><span class="nav-number">2.2.1.</span> <span class="nav-text">onehot编码实操</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multi-hot%E7%BC%96%E7%A0%81"><span class="nav-number">2.2.2.</span> <span class="nav-text">multi-hot编码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E7%9A%84%E5%B0%BA%E5%BA%A6%E5%92%8C%E7%89%B9%E5%BE%81%E7%9A%84%E5%88%86%E5%B8%83"><span class="nav-number">2.3.</span> <span class="nav-text">特征的尺度和特征的分布</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spark%E7%94%9F%E6%88%90Item2Vec%E5%92%8CGraph-Embedding"><span class="nav-number">3.</span> <span class="nav-text">Spark生成Item2Vec和Graph Embedding</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Item2Vec"><span class="nav-number">4.</span> <span class="nav-text">Item2Vec</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Item2Vec%EF%BC%9A%E5%A4%84%E7%90%86%E6%95%B0%E6%8D%AE"><span class="nav-number">4.1.</span> <span class="nav-text">Item2Vec：处理数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Item2Vec%EF%BC%9A%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83"><span class="nav-number">4.2.</span> <span class="nav-text">Item2Vec：模型训练</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E5%AE%9A%E6%A8%A1%E5%9E%8B%E8%B6%85%E5%8F%82%E6%95%B0"><span class="nav-number">4.2.1.</span> <span class="nav-text">设定模型超参数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E9%9A%8F%E6%9C%BA%E6%B8%B8%E8%B5%B0%E7%9A%84Graph-Embedding%E6%96%B9%E6%B3%95"><span class="nav-number">5.</span> <span class="nav-text">基于随机游走的Graph Embedding方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Deep-Walk%E5%AE%9E%E7%8E%B0"><span class="nav-number">5.1.</span> <span class="nav-text">Deep Walk实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%8F%E6%9C%BA%E6%B8%B8%E8%B5%B0%E9%87%87%E6%A0%B7"><span class="nav-number">5.1.1.</span> <span class="nav-text">随机游走采样</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
