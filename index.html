@@ -125,12 +125,12 @@
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/Categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">2</span></a>
+    <a href="/Categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">3</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">4</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">5</span></a>
 
   </li>
         <li class="menu-item menu-item-schedule">
@@ -165,6 +165,125 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2023/08/04/Hadoop%E7%94%9F%E6%80%81%E5%9C%88%E4%B8%8EHDFS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sure Zheng">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sure's BLOG">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/04/Hadoop%E7%94%9F%E6%80%81%E5%9C%88%E4%B8%8EHDFS/" class="post-title-link" itemprop="url">Hadoop 生态圈与 HDFS</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-08-04 23:24:27" itemprop="dateCreated datePublished" datetime="2023-08-04T23:24:27+08:00">2023-08-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-08-05 00:05:08" itemprop="dateModified" datetime="2023-08-05T00:05:08+08:00">2023-08-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>670</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Hadoop 的核心是 YARN，HDFS 和 Mapreduce</p>
+<h1 id="HDFS-分布式文件系统"><a href="#HDFS-分布式文件系统" class="headerlink" title="HDFS 分布式文件系统"></a>HDFS 分布式文件系统</h1><ul>
+<li>HDFS 是 Hadoop 分布式文件系统</li>
+<li>HDFS采用了主从（Master/Slave）结构模型，一个HDFS集群包括一个名称节点（ NameNode）和若干个数据节点（DataNode）。</li>
+<li>存储离线数据，先通过 hdfs 做理想处理</li>
+<li>模型训练的时候，也通过挂载hdfs的方式直接读取tensor进行训练</li>
+<li>一次写入多次读取机制</li>
+</ul>
+<figure class="highlight bash"><figcaption><span>列出所有目录和文件</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -<span class="built_in">ls</span>  /</span><br></pre></td></tr></table></figure>
+
+<h1 id="Hadoop-的计算系统：MapReduce"><a href="#Hadoop-的计算系统：MapReduce" class="headerlink" title="Hadoop 的计算系统：MapReduce"></a>Hadoop 的计算系统：MapReduce</h1><ul>
+<li>map，做数据映射，从json文件中读取想要字段</li>
+<li>reduce，做数据汇总，计算平均数、中位数等</li>
+<li>分布式处理，map阶段对hdfs中每一个文件设置map读文件；同步并行reduce对map进行加工</li>
+</ul>
+<h1 id="Hive-数据仓库"><a href="#Hive-数据仓库" class="headerlink" title="Hive - 数据仓库"></a>Hive - 数据仓库</h1><p>基于 Hadoop 的一个数据仓库工具，提供简单的sql查询功能</p>
+<ul>
+<li>解决数据存储、处理和计算问题</li>
+<li>数据关联：点击数据、商品数据，计算出用户点击的商品信息</li>
+</ul>
+<h1 id="Hbase-数据库-分布式列存数据库"><a href="#Hbase-数据库-分布式列存数据库" class="headerlink" title="Hbase 数据库 - 分布式列存数据库"></a>Hbase 数据库 - 分布式列存数据库</h1><p>基于 Hadoop 的数据库，分布式、可扩展的 Nosql数据库，提供内存 Hash 表，通过存储索引来查询</p>
+<ul>
+<li>解决实时数据查询问题</li>
+<li>采用 BigTable数据模型，增加 KV 映射</li>
+</ul>
+<h1 id="zookeeper-分布式协作服务"><a href="#zookeeper-分布式协作服务" class="headerlink" title="zookeeper - 分布式协作服务"></a>zookeeper - 分布式协作服务</h1><p>为分布式应用提供一致性服务的组件：配置维护、域名维护、分布式同步</p>
+<h1 id="Yarn-分布式资源管理器"><a href="#Yarn-分布式资源管理器" class="headerlink" title="Yarn - 分布式资源管理器"></a>Yarn - 分布式资源管理器</h1><p>分布式的操作系统平台</p>
+<ul>
+<li>Resource Manager，负责所有资源的监控、分配和管理 </li>
+<li>Node Mangaer，负责每一个节点的维护</li>
+<li>Application Master，负责每一个具体应用程序的调度和协调</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2023/08/03/Spark%E5%BC%95%E6%93%8E%E4%B8%8E%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -179,7 +298,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/08/03/Spark%E5%BC%95%E6%93%8E%E4%B8%8E%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B/" class="post-title-link" itemprop="url">Spark引擎与特征工程</a>
+            <a href="/2023/08/03/Spark%E5%BC%95%E6%93%8E%E4%B8%8E%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B/" class="post-title-link" itemprop="url">Spark 引擎与特征工程</a>
         </h2>
 
         <div class="post-meta">
@@ -188,10 +307,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2023-08-03 21:48:25 / Modified: 22:58:42" itemprop="dateCreated datePublished" datetime="2023-08-03T21:48:25+08:00">2023-08-03</time>
+              <time title="Created: 2023-08-03 21:48:25" itemprop="dateCreated datePublished" datetime="2023-08-03T21:48:25+08:00">2023-08-03</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-08-04 23:07:26" itemprop="dateModified" datetime="2023-08-04T23:07:26+08:00">2023-08-04</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -235,7 +360,7 @@
 <ul>
 <li>架构：manager node：调度组织；worker node：调度执行，结果返回给 Driver</li>
 <li>Stage内：计算节点并行工作：主机、docker container；<br>map/filter 需要逐条数据处理，可以并行处理</li>
-<li>Stage 外：join 需要shuffle/reduce，消耗资源，shuffle汇总统计结果 -&gt; reduce结果</li>
+<li>Stage 外：join 需要 shuffle/reduce，消耗资源，shuffle汇总统计结果 -&gt; reduce结果</li>
 <li>Driver功能：举例：RDD（分布式对象集合）生成DAG(TextFile/HDFS -&gt; map -&gt; filter -&gt; join -&gt; map)</li>
 <li>数据流中提供 map、repartition 功能</li>
 </ul>
@@ -333,7 +458,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-08-03 22:48:28" itemprop="dateModified" datetime="2023-08-03T22:48:28+08:00">2023-08-03</time>
+                <time title="Modified: 2023-08-04 23:07:37" itemprop="dateModified" datetime="2023-08-04T23:07:37+08:00">2023-08-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -727,14 +852,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/Categories/">
           
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
