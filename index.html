@@ -188,10 +188,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2023-08-31 21:48:40 / Modified: 23:38:27" itemprop="dateCreated datePublished" datetime="2023-08-31T21:48:40+08:00">2023-08-31</time>
+              <time title="Created: 2023-08-31 21:48:40" itemprop="dateCreated datePublished" datetime="2023-08-31T21:48:40+08:00">2023-08-31</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-09-04 23:49:14" itemprop="dateModified" datetime="2023-09-04T23:49:14+08:00">2023-09-04</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -212,14 +218,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.4k</span>
+              <span>2.8k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>4 mins.</span>
+              <span>5 mins.</span>
             </span>
 
         </div>
@@ -231,7 +237,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="pb（Protocol-Buffers）"><a href="#pb（Protocol-Buffers）" class="headerlink" title="pb（Protocol Buffers）"></a>pb（Protocol Buffers）</h1><p>序列化结构化数据（二进制）适用于数据量大、数据传输效率高的场景</p>
+          <p>大规模数据分析、异构数据源场景、数据、模型等IO要求高场景需要 parquet 数据格式，同样 pb 等序列化结构数据，在数据传输、存储中占用资源较少，因此 PB 文件也广泛的应用于算法之中。</p>
+<h1 id="pb（Protocol-Buffers）"><a href="#pb（Protocol-Buffers）" class="headerlink" title="pb（Protocol Buffers）"></a>pb（Protocol Buffers）</h1><p>序列化结构化数据（二进制）适用于数据量大、数据传输效率高的场景</p>
 <ul>
 <li>序列化后，数据流小，占用网络单款少</li>
 <li>序列化和反序列化的性能，占用CPU资源少</li>
@@ -254,16 +261,17 @@
 <ul>
 <li>键-值 序列化</li>
 </ul>
-<h1 id="Parquet"><a href="#Parquet" class="headerlink" title="Parquet"></a>Parquet</h1><p>列存储、大数据存储格式、Hadoop 生态圈</p>
+<h1 id="Parquet"><a href="#Parquet" class="headerlink" title="Parquet"></a>Parquet</h1><p>parquet 采用类似 PB 协议来描述存储结果schema。列存储、大数据存储格式、Hadoop 生态圈</p>
 <ul>
 <li>适用于 OLAP 场景</li>
 <li>适用于 模型训练 场景</li>
 <li>优势：更高压缩比、更小 IO 操作，适配多语言和组件</li>
 <li>行组 + 列块 + 页</li>
 </ul>
+<p>Parquet 通常和 挂盘功能一并使用，挂载（mounting）是指由操作系统使一个存储设备（诸如硬盘、CD-ROM或共享资源）上的计算机文件和目录可供用户通过计算机的文件系统访问的一个过程。 一般来说，当计算机关机时，每个已挂载存储都将经历一次卸载，以确保所有排队的数据被写入，并保证介质上文件系统结构的完整性。 访问这个目录来访问存储设备。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">message AddressBook &#123;</span><br><span class="line"> required string owner;</span><br><span class="line"> repeated string ownerPhoneNumbers;</span><br><span class="line"> repeated group contacts &#123;</span><br><span class="line">   required string name;</span><br><span class="line">   optional string phoneNumber; </span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h1 id="TF-Record"><a href="#TF-Record" class="headerlink" title="TF Record"></a>TF Record</h1><p>Tensorflow 自带的数据格式</p>
+<h1 id="TF-Record"><a href="#TF-Record" class="headerlink" title="TF Record"></a>TF Record</h1><p>Tensorflow 自带的数据格式，将数据存储为二进制文件（二进制存储具有占用空间少，拷贝和读取（from disk）更加高效的特点），而且不需要单独的标签文件了，其本质是一行行字节字符串构成的样本数据。</p>
 <ul>
 <li>训练方式：1、内存； 2、使用 queue/tf.data</li>
 <li>优势<ul>
@@ -277,11 +285,17 @@
 <figure class="highlight bash"><figcaption><span>读取TFRecord文件</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">def read_demo(filepath):</span><br><span class="line">		<span class="comment"># 定义schema</span></span><br><span class="line">    schema = &#123;</span><br><span class="line">        <span class="string">&#x27;user_id&#x27;</span>: tf.FixedLenFeature([], tf.int64),</span><br><span class="line">        <span class="string">&#x27;city_id&#x27;</span>: tf.FixedLenFeature([], tf.int64),</span><br><span class="line">        <span class="string">&#x27;app_type&#x27;</span>: tf.FixedLenFeature([], tf.int64),</span><br><span class="line">        <span class="string">&#x27;viewed_pois&#x27;</span>: tf.VarLenFeature(tf.int64),</span><br><span class="line">        <span class="string">&#x27;avg_paid&#x27;</span>: tf.FixedLenFeature([], tf.float32, default_value=0.0),</span><br><span class="line">        <span class="string">&#x27;comment&#x27;</span>: tf.FixedLenFeature([], tf.string, default_value=<span class="string">&#x27;&#x27;</span>),</span><br><span class="line">    &#125;</span><br><span class="line">		</span><br><span class="line">    <span class="comment"># 使用相关api，按照schema解析dataset中的样本</span></span><br><span class="line">    def _parse_function(example_proto):</span><br><span class="line">        <span class="built_in">return</span> tf.parse_single_example(example_proto, schema)</span><br><span class="line">		</span><br><span class="line">    <span class="comment"># 读取TFRecord文件来创建dataset</span></span><br><span class="line">    dataset = tf.data.TFRecordDataset(filepath)</span><br><span class="line">    <span class="comment">#按照schema解析dataset中的每个样本</span></span><br><span class="line">    parsed_dataset = dataset.map(_parse_function)</span><br><span class="line">    <span class="comment">#创建Iterator并迭代Iterator即可访问dataset中的样本</span></span><br><span class="line">    next = parsed_dataset.make_one_shot_iterator().get_next()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 这里直接利用session，打印dataset中的样本</span></span><br><span class="line">    with tf.Session() as sess:</span><br><span class="line">        <span class="keyword">while</span> True:</span><br><span class="line">            try:</span><br><span class="line">                <span class="built_in">print</span> sess.run(next)</span><br><span class="line">            except:</span><br><span class="line">                <span class="built_in">print</span> <span class="string">&quot;out of data&quot;</span></span><br><span class="line">                <span class="built_in">break</span></span><br></pre></td></tr></table></figure>
 
 <h1 id="Json-和-XML-和-ORC"><a href="#Json-和-XML-和-ORC" class="headerlink" title="Json 和 XML 和 ORC"></a>Json 和 XML 和 ORC</h1><p>Json，数据支持好，支持所有编程语言，但不适用于大数据量的传输场景</p>
-<p>XML，采用键值对的方式，可读性高，压缩数据空间</p>
+<p>XML，用于序列化和封装数据。采用键值对的方式，可读性高，压缩数据空间</p>
 <p>ORC，列存</p>
 <ul>
 <li>ORC 嵌套和损耗较大</li>
 <li>支持 update 和 ACID</li>
+</ul>
+<p>Avro，基于行的存储格式，被广泛用作序列化过程。</p>
+<ul>
+<li>可拆分的</li>
+<li>可压缩的</li>
+<li>以 Json 定义的 Avro 模式，便于阅读和解析</li>
 </ul>
 
       
