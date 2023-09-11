@@ -130,7 +130,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">12</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">13</span></a>
 
   </li>
         <li class="menu-item menu-item-schedule">
@@ -161,6 +161,139 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2023/08/02/flink%E5%BC%95%E6%93%8E%E4%B8%8E%E5%AE%9E%E6%97%B6%E6%8E%A8%E8%8D%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sure Zheng">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sure's BLOG">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/02/flink%E5%BC%95%E6%93%8E%E4%B8%8E%E5%AE%9E%E6%97%B6%E6%8E%A8%E8%8D%90/" class="post-title-link" itemprop="url">Flink 引擎与实时推荐</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-08-02 22:29:53" itemprop="dateCreated datePublished" datetime="2023-08-02T22:29:53+08:00">2023-08-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-08-04 23:07:37" itemprop="dateModified" datetime="2023-08-04T23:07:37+08:00">2023-08-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Categories/%E7%AE%97%E6%B3%95/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1.5k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>3 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Flink引擎与Kafka"><a href="#Flink引擎与Kafka" class="headerlink" title="Flink引擎与Kafka"></a>Flink引擎与Kafka</h1><p>Flink是流处理框架，Kafka消息队列是最广泛使用的消息队列（JDQ、JMQ），Flink引擎通常用来处理 Kafka消息队列中的消息（Topic）；</p>
+<h2 id="Flink-介绍"><a href="#Flink-介绍" class="headerlink" title="Flink 介绍"></a>Flink 介绍</h2><ul>
+<li>Flink 提供两种类型类型 API：<strong>DataStream API</strong>; <strong>Table API</strong>;（数据流中同样提供两种API形式做数据处理，并提供可以进行转换的算子进行不同API间算子的串联）</li>
+<li>Datastream API 和 Table API 不相互依赖，可以混合使用</li>
+<li>支持流处理和批处理</li>
+<li>共享槽位组，可以实现资源隔离（Java 线程上隔离）</li>
+<li>支持并行度设置，客户端执行预处理并转换为并行数据流形式，由TM和JM来执行</li>
+</ul>
+<h2 id="重要特性"><a href="#重要特性" class="headerlink" title="重要特性"></a>重要特性</h2><h3 id="支持窗口类型"><a href="#支持窗口类型" class="headerlink" title="支持窗口类型"></a>支持窗口类型</h3><ul>
+<li>滑动窗口，移动窗口，移动window slile, window_slide &lt; window_size</li>
+<li>滚动窗口，window_slide = 0时的窗口</li>
+<li>会话窗口和全局窗口用的不多<br>Flink 按照时间窗口（window）来处理流数据，把缓存在内存中数据进行批处理。通过连接曝光数据和点击数据，计算 CTR。<h3 id="问题？分割两个窗口怎么办？"><a href="#问题？分割两个窗口怎么办？" class="headerlink" title="问题？分割两个窗口怎么办？"></a>问题？分割两个窗口怎么办？</h3>滑动窗口提供给两窗口时间间隔足够时间做 Join，避免数据遗漏</li>
+</ul>
+<h3 id="支持有状态流"><a href="#支持有状态流" class="headerlink" title="支持有状态流"></a>支持有状态流</h3><ul>
+<li>容错机制完善，提供checkpoint和statebackends（状态存储）功能</li>
+<li>提供 memory、filesystem、rocksDB三种类型的状态存储机制</li>
+</ul>
+<h2 id="Kafka-介绍"><a href="#Kafka-介绍" class="headerlink" title="Kafka 介绍"></a>Kafka 介绍</h2><ul>
+<li><strong>分布式的</strong>、<strong>多副本</strong>，基于 Zookeeper 的分布式消息流平台</li>
+<li>多用于提交日志从而做全链路分析、流量跟踪（点击流）从而做推荐、实时监控</li>
+<li>支持消息压缩，支持LZ4、snappy等格式</li>
+</ul>
+<h3 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h3><ul>
+<li>高吞吐，10几万条消息/s</li>
+<li>高伸缩，每个主题包含多个 partition</li>
+<li>容错性，集群中某个节点失败，Kafka集群可以正常工作</li>
+<li>支持设置检查点，可以从停止时的检查点重新启动</li>
+<li>支持重置位点功能，可以从指定位点进行消费</li>
+<li>提供多消费者、生产者、broker（独立Kafka服务器，域名+端口号）</li>
+</ul>
+<h2 id="Flink批流一体Kappa架构浅谈"><a href="#Flink批流一体Kappa架构浅谈" class="headerlink" title="Flink批流一体Kappa架构浅谈"></a>Flink批流一体Kappa架构浅谈</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>无存储系统，运行速度快</li>
+<li>增加数据重播功能，数据落盘后进行落盘数据处理，保证代码维护一致性</li>
+</ul>
+<h3 id="难点"><a href="#难点" class="headerlink" title="难点"></a>难点</h3><ul>
+<li>已构造数据体系</li>
+<li>批流一体难以共享一套代码，复杂特征（用户观看视频的百分比）</li>
+<li>数据时间跨度大、计算复杂，难以实现</li>
+</ul>
+<h2 id="实操"><a href="#实操" class="headerlink" title="实操"></a>实操</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">DataStream&lt;Rating&gt; ratingStream = inputStream.map(Rating::new);</span><br><span class="line">ratingStream.keyBy(rating -&gt; rating.userId)</span><br><span class="line">        .timeWindow(Time.seconds(1))</span><br><span class="line">        .reduce(</span><br><span class="line">                (ReduceFunction&lt;Rating&gt;) (rating, t1) -&gt; &#123;</span><br><span class="line">                    <span class="keyword">if</span> (rating.timestamp.compareTo(t1.timestamp) &gt; 0)&#123;</span><br><span class="line">                        <span class="built_in">return</span> rating;</span><br><span class="line">                    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                        <span class="built_in">return</span> t1;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">        ).addSink(new SinkFunction&lt;Rating&gt;() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void invoke(Rating value, Context context) &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;userId:&quot;</span> + value.userId + <span class="string">&quot;\tlatestMovieId:&quot;</span> + value.latestMovieId);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h1 id="Flink引擎搭建实时数仓"><a href="#Flink引擎搭建实时数仓" class="headerlink" title="Flink引擎搭建实时数仓"></a>Flink引擎搭建实时数仓</h1><p><a target="_blank" rel="noopener" href="https://tech.meituan.com/2021/08/26/data-warehouse-in-meituan-waimai.html">美团基于 Flink 的实时数仓建设实践</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -460,7 +593,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
