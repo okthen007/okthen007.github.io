@@ -188,10 +188,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2023-09-10 22:46:50 / Modified: 23:04:26" itemprop="dateCreated datePublished" datetime="2023-09-10T22:46:50+08:00">2023-09-10</time>
+              <time title="Created: 2023-09-10 22:46:50" itemprop="dateCreated datePublished" datetime="2023-09-10T22:46:50+08:00">2023-09-10</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-09-11 23:09:57" itemprop="dateModified" datetime="2023-09-11T23:09:57+08:00">2023-09-11</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -208,7 +214,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>399</span>
+              <span>720</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -231,16 +237,25 @@
 <p>数据湖中数据包括 结构化数据（关系型数据库）；半结构化数据（CSV、Json、XML等）；非结构化数据/二进制数据（图片、视频）；</p>
 <p>数据湖的特性：</p>
 <ul>
-<li>MOR（merge on read）：写入在分析时</li>
+<li>MOR（merge on read）：写入在分析时，类似 github 的 push</li>
+<li>Update，只更新单列</li>
 <li>更快查询结果、较低存储成本</li>
 <li>可用于算法领域，机器学习、预测分析等</li>
 </ul>
-<p>阿里云 - 开源生态构建数据湖</p>
+<p>技术视角分析数据湖：<br>数据湖具备数据管理、数据溯源、流批一体的数据入湖架构，通常数据湖都会支持SQL和可编程的 Flink/Spark 数据处理能力，通常支持有向无环图的工作流模式。<br>最好可以提供一个标准的访问接口，类似于 JDBC 接口可以直接访问数据；</p>
+<ul>
+<li>风控、推荐、预警（搜索下拉场景，来一条数据处理一条）</li>
+<li>日活、留存、转化（CTR场景下，数据探索类应用）</li>
+<li>图片、视频存储（多模态场景下，存储多模态数据）</li>
+</ul>
+<p>阿里云案例 - 开源生态构建数据湖</p>
 <ul>
 <li>提供数据湖元数据管理、数据湖加速等服务</li>
 <li>客户价值1： 通过分层存储，引入多存储类型解决客户温/冷数据长期存储成本优化，让用户资源扩容更加灵活</li>
 <li>客户价值2: 计算与存储弹性扩展能力降低管理运维难度，存储与计算的解耦合，让升级更具灵活性</li>
 </ul>
+<p>典型的数据湖架构：<br>分布式对象存储+多模态计算引擎+数据管理</p>
+<p>典型大数据仓库存储架构：<br>FDM（原始数据） + GDM（整合和拉宽数据） + ADM（轻量汇总数据） + APP（业务定制数据） + DEV层（临时数据）</p>
 
       
     </div>
@@ -291,7 +306,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-09-04 23:49:14" itemprop="dateModified" datetime="2023-09-04T23:49:14+08:00">2023-09-04</time>
+                <time title="Modified: 2023-09-11 23:04:36" itemprop="dateModified" datetime="2023-09-11T23:04:36+08:00">2023-09-11</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -343,8 +358,9 @@
 </ul>
 <h1 id="定义pb文件规范"><a href="#定义pb文件规范" class="headerlink" title="定义pb文件规范"></a>定义pb文件规范</h1><ul>
 <li>proto文件<figure class="highlight bash"><figcaption><span>创建proto文件</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">syntax = <span class="string">&quot;proto3&quot;</span>; <span class="comment"># proto3语法</span></span><br><span class="line"><span class="comment"># 用户服务请求</span></span><br><span class="line">message SearchRequest &#123;</span><br><span class="line">  string query = 1;</span><br><span class="line">  int32 page_number = 2;</span><br><span class="line">  int32 result_per_page = 3;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 服务请求返回</span></span><br><span class="line">message MyRequest &#123;</span><br><span class="line">  string name = 1;</span><br><span class="line">  int32 age = 2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li>文件中定义message类型的数据格式<figure class="highlight bash"><figcaption><span>message类型数据格式</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一级视图，可作为业务</span></span><br><span class="line"> message MyRequest &#123;</span><br><span class="line">    string name = 1;</span><br><span class="line">    int32 gender = 2;</span><br><span class="line">    optional bytes predict_gender = 3;  <span class="comment"># 算法场景bytes</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 二级视图，可作为特征</span></span><br><span class="line"> message gender &#123;</span><br><span class="line">    string male = 1;</span><br><span class="line">    string female = 2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="【数据流】Data2protobuf-Function"><a href="#【数据流】Data2protobuf-Function" class="headerlink" title="【数据流】Data2protobuf Function"></a>【数据流】Data2protobuf Function</h2></li>
+<li>文件中定义message类型的数据格式<figure class="highlight bash"><figcaption><span>message类型数据格式</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一级视图，可作为业务</span></span><br><span class="line"> message MyRequest &#123;</span><br><span class="line">    string name = 1;</span><br><span class="line">    int32 gender = 2;</span><br><span class="line">    optional bytes predict_gender = 3;  <span class="comment"># 算法场景bytes</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 二级视图，可作为特征</span></span><br><span class="line"> message gender &#123;</span><br><span class="line">    string male = 1;</span><br><span class="line">    string female = 2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="数据流-Data2protobuf-Function"><a href="#数据流-Data2protobuf-Function" class="headerlink" title="数据流-Data2protobuf Function"></a>数据流-Data2protobuf Function</h2><ul>
 <li>pb 类名（pb 所在完整类名，存储于自定义资产中）</li>
 <li>数据类型支持<ul>
 <li>byteArray（byte数组转pb）</li>
