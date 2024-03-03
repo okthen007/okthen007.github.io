@@ -20,21 +20,20 @@
     var CONFIG = {"hostname":"shuo-shuo.site","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="模型离线评估方法HoldOut 检验随机分为，训练集和测试集（70%训练集；30%测试集） 交叉检验消除随机性，k个验证集和测试集 自助法（Bootstrap）自助采样的验证方法，N次有放回的随机抽样（改变原有数据的分布，产生偏差） 时间切割t时刻，t+1时刻（未来信息），分布在 (t0, tn)， 时间切割划分测试集和训练集，切割比例, 3:1 OR 10:1，缺点：评估过程静态 离线 Rep">
+  <meta name="description" content="简述openAI 近期发布的文生视频、图生视频模型，可以以简单的 Prompt 生成逼真的、无ps痕迹的视频，也是如今 AI 界的一大变革。 历史演进文生图的技术，最早可以追溯到 Stable Diffusion模型， 其中大家耳熟能详的 CLIP 模型（多模态模型）主要做的事情是，zero-shot prediction，通过文本特征和图片特征做相关性匹配，进而通过 prompt 对图片进行分类">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spark 与离线评估">
-<meta property="og:url" content="http://shuo-shuo.site/2023/08/14/Spark%E4%B8%8E%E7%A6%BB%E7%BA%BF%E8%AF%84%E4%BC%B0/index.html">
+<meta property="og:title" content="有关Sora的一点思考">
+<meta property="og:url" content="http://shuo-shuo.site/2023/08/09/%E6%9C%89%E5%85%B3Sora%E7%9A%84%E4%B8%80%E7%82%B9%E6%80%9D%E8%80%83/index.html">
 <meta property="og:site_name" content="Sure&#39;s BLOG">
-<meta property="og:description" content="模型离线评估方法HoldOut 检验随机分为，训练集和测试集（70%训练集；30%测试集） 交叉检验消除随机性，k个验证集和测试集 自助法（Bootstrap）自助采样的验证方法，N次有放回的随机抽样（改变原有数据的分布，产生偏差） 时间切割t时刻，t+1时刻（未来信息），分布在 (t0, tn)， 时间切割划分测试集和训练集，切割比例, 3:1 OR 10:1，缺点：评估过程静态 离线 Rep">
+<meta property="og:description" content="简述openAI 近期发布的文生视频、图生视频模型，可以以简单的 Prompt 生成逼真的、无ps痕迹的视频，也是如今 AI 界的一大变革。 历史演进文生图的技术，最早可以追溯到 Stable Diffusion模型， 其中大家耳熟能详的 CLIP 模型（多模态模型）主要做的事情是，zero-shot prediction，通过文本特征和图片特征做相关性匹配，进而通过 prompt 对图片进行分类">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2023-08-14T13:55:52.000Z">
-<meta property="article:modified_time" content="2023-09-11T15:11:51.059Z">
+<meta property="article:published_time" content="2023-08-09T14:23:57.000Z">
+<meta property="article:modified_time" content="2024-03-03T14:05:27.937Z">
 <meta property="article:author" content="Sure Zheng">
-<meta property="article:tag" content="计算引擎">
 <meta property="article:tag" content="技术学习">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://shuo-shuo.site/2023/08/14/Spark%E4%B8%8E%E7%A6%BB%E7%BA%BF%E8%AF%84%E4%BC%B0/">
+<link rel="canonical" href="http://shuo-shuo.site/2023/08/09/%E6%9C%89%E5%85%B3Sora%E7%9A%84%E4%B8%80%E7%82%B9%E6%80%9D%E8%80%83/">
 
 
 <script id="page-configurations">
@@ -47,7 +46,7 @@
   };
 </script>
 
-  <title>Spark 与离线评估 | Sure's BLOG</title>
+  <title>有关Sora的一点思考 | Sure's BLOG</title>
   
 
 
@@ -172,7 +171,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2023/08/14/Spark%E4%B8%8E%E7%A6%BB%E7%BA%BF%E8%AF%84%E4%BC%B0/">
+    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2023/08/09/%E6%9C%89%E5%85%B3Sora%E7%9A%84%E4%B8%80%E7%82%B9%E6%80%9D%E8%80%83/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -185,7 +184,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Spark 与离线评估
+          有关Sora的一点思考
         </h1>
 
         <div class="post-meta">
@@ -195,14 +194,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2023-08-14 21:55:52" itemprop="dateCreated datePublished" datetime="2023-08-14T21:55:52+08:00">2023-08-14</time>
+              <time title="Created: 2023-08-09 22:23:57" itemprop="dateCreated datePublished" datetime="2023-08-09T22:23:57+08:00">2023-08-09</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-09-11 23:11:51" itemprop="dateModified" datetime="2023-09-11T23:11:51+08:00">2023-09-11</time>
+                <time title="Modified: 2024-03-03 22:05:27" itemprop="dateModified" datetime="2024-03-03T22:05:27+08:00">2024-03-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -212,10 +211,6 @@
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/Categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
                 </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Categories/%E7%AE%97%E6%B3%95/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
-                </span>
             </span>
 
           <br>
@@ -224,7 +219,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>942</span>
+              <span>877</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -243,17 +238,26 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <hr>
-<h1 id="模型离线评估方法"><a href="#模型离线评估方法" class="headerlink" title="模型离线评估方法"></a>模型离线评估方法</h1><h2 id="HoldOut-检验"><a href="#HoldOut-检验" class="headerlink" title="HoldOut 检验"></a>HoldOut 检验</h2><p>随机分为，训练集和测试集（70%训练集；30%测试集）</p>
-<h2 id="交叉检验"><a href="#交叉检验" class="headerlink" title="交叉检验"></a>交叉检验</h2><p>消除随机性，k个验证集和测试集</p>
-<h2 id="自助法（Bootstrap）"><a href="#自助法（Bootstrap）" class="headerlink" title="自助法（Bootstrap）"></a>自助法（Bootstrap）</h2><p>自助采样的验证方法，N次有放回的随机抽样（改变原有数据的分布，产生偏差）</p>
-<h2 id="时间切割"><a href="#时间切割" class="headerlink" title="时间切割"></a>时间切割</h2><p>t时刻，t+1时刻（未来信息），分布在 (t0, tn)， 时间切割划分测试集和训练集，切割比例, 3:1 OR 10:1，缺点：评估过程静态</p>
-<h2 id="离线-Replay"><a href="#离线-Replay" class="headerlink" title="离线 Replay"></a>离线 Replay</h2><p>离线状态下对线上更新过程进行仿真，让整个评估过程“动”起来</p>
-<h1 id="基于-Spark-的离线评估方法实操"><a href="#基于-Spark-的离线评估方法实操" class="headerlink" title="基于 Spark 的离线评估方法实操"></a>基于 Spark 的离线评估方法实操</h1><figure class="highlight bash"><figcaption><span>Spark 随机划分测试集和训练集</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">val Array(trainingSamples, testSamples) = samples.randomSplit(Array(0.9, 0.1))</span><br></pre></td></tr></table></figure>
+        <h1 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h1><p>openAI 近期发布的文生视频、图生视频模型，可以以简单的 Prompt 生成逼真的、无ps痕迹的视频，也是如今 AI 界的一大变革。</p>
+<h2 id="历史演进"><a href="#历史演进" class="headerlink" title="历史演进"></a>历史演进</h2><p>文生图的技术，最早可以追溯到 Stable Diffusion模型， 其中大家耳熟能详的 CLIP 模型（多模态模型）主要做的事情是，zero-shot prediction，通过文本特征和图片特征做相关性匹配，进而通过 prompt 对图片进行分类。而 Stable Diffusion 用到的技术主要有两个，一是 Transformer，把 Transformer 架构应用于 CV 领域；二是 图像文本描述的增强，通过文本描述来提升模型的生成能力；文生视频的技术主要在于对时空语义建模，也是使用的 Transformer 架构，首先需要对视频的隐空间表示 patch 化，其次需要利用 Transformer 架构对空间维度和时间维度的语义进行建模；</p>
+<h2 id="Sora-思考"><a href="#Sora-思考" class="headerlink" title="Sora 思考"></a>Sora 思考</h2><p>Sora 简介：text conditional diffusion models: 基于不同时间长度、像素大小、尺寸，使用 transformer 架构 —&gt; 生成分钟级的高保真模型。</p>
+<h3 id="几大特点："><a href="#几大特点：" class="headerlink" title="几大特点："></a>几大特点：</h3><ol>
+<li>视频训练模型新范式：<br>图像数据转Patches，先压缩，浅空间里大量训练，时间、空间提取出来<br>通过扩散模型解压到像素空间<br>resolutions，aspect ratios（不同时间长度、不同像素、不同尺寸）<br>语言理解程度，训练模型做标注，通过 GPT 对短的语言模型进行加长，视频标注和文本对齐。</li>
+<li>通过图片和视频，进行二次加工，通过图片生成动画。</li>
+<li>扩帧已有视频</li>
+<li>视频改造（video editing）</li>
+</ol>
+<h3 id="核心延展："><a href="#核心延展：" class="headerlink" title="核心延展："></a>核心延展：</h3><ul>
+<li>3D 场景一致性（3D一致性）</li>
+<li>前后关联性（long-range coherence and object permanence）</li>
+<li>模拟虚拟世界能力</li>
+</ul>
+<h3 id="思考："><a href="#思考：" class="headerlink" title="思考："></a>思考：</h3><ol>
+<li>sora 需要巨大的算力才能支撑起一分钟的时间窗口，看起来也像是大力出奇迹的作品</li>
+<li>多模态模型，预测是未来趋势，但是从 CLIP 模型开始，小公司就没有那么大的算力来陪跑了，文生视频模型看起来也是算力垄断公司的作品</li>
+<li>Text Encoder，扩散能力、自动标注 是否也将长期成为大模型领域的重点？</li>
+</ol>
 
-<figure class="highlight bash"><figcaption><span>交叉检验接口</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">val cv = new CrossValidator()</span><br><span class="line">  .setEstimator(modelPipeline) <span class="comment"># 评估对象，构建模型pipeline</span></span><br><span class="line">  .setEvaluator(new BinaryClassificationEvaluator)  <span class="comment"># 设置评估所用的方法和指标</span></span><br><span class="line">  .setEstimatorParamMaps(paramGrid) </span><br><span class="line">  .setNumFolds(10)  // Use 3+ <span class="keyword">in</span> practice <span class="comment"># 交叉检验中 k 的值</span></span><br><span class="line">val cvModel = cv.fit(training)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//找到时间切割点</span><br><span class="line">val quantile = smallSamples.stat.approxQuantile(<span class="string">&quot;timestampLong&quot;</span>, Array(0.8), 0.05)</span><br><span class="line">val splitTimestamp = quantile.apply(0)</span><br><span class="line">//切割样本为训练集和测试集</span><br><span class="line">val training = smallSamples.<span class="built_in">where</span>(col(<span class="string">&quot;timestampLong&quot;</span>) &lt;= splitTimestamp).drop(<span class="string">&quot;timestampLong&quot;</span>)</span><br><span class="line">val <span class="built_in">test</span> = smallSamples.<span class="built_in">where</span>(col(<span class="string">&quot;timestampLong&quot;</span>) &gt; splitTimestamp).drop(<span class="string">&quot;timestampLong&quot;</span>)</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -282,7 +286,6 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E/" rel="tag"><i class="fa fa-tag"></i> 计算引擎</a>
               <a href="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 技术学习</a>
           </div>
 
@@ -292,12 +295,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/08/09/%E6%9C%89%E5%85%B3Sora%E7%9A%84%E4%B8%80%E7%82%B9%E6%80%9D%E8%80%83/" rel="prev" title="有关Sora的一点思考">
-      <i class="fa fa-chevron-left"></i> 有关Sora的一点思考
+    <a href="/2023/08/09/%E6%A8%A1%E5%9E%8B%E6%9C%8D%E5%8A%A1%E4%B8%8ERPC/" rel="prev" title="模型服务与 RPC">
+      <i class="fa fa-chevron-left"></i> 模型服务与 RPC
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023/08/14/ClickHouse%E4%B8%8EDoris%E6%95%B0%E6%8D%AE%E5%BA%93%E6%B7%B1%E5%BA%A6%E5%88%86%E6%9E%90/" rel="next" title="ClickHouse 与 Doris 数据库深度分析">
-      ClickHouse 与 Doris 数据库深度分析 <i class="fa fa-chevron-right"></i>
+    <a href="/2023/08/14/Spark%E4%B8%8E%E7%A6%BB%E7%BA%BF%E8%AF%84%E4%BC%B0/" rel="next" title="Spark 与离线评估">
+      Spark 与离线评估 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -357,7 +360,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E7%A6%BB%E7%BA%BF%E8%AF%84%E4%BC%B0%E6%96%B9%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">模型离线评估方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HoldOut-%E6%A3%80%E9%AA%8C"><span class="nav-number">1.1.</span> <span class="nav-text">HoldOut 检验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E5%8F%89%E6%A3%80%E9%AA%8C"><span class="nav-number">1.2.</span> <span class="nav-text">交叉检验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%8A%A9%E6%B3%95%EF%BC%88Bootstrap%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">自助法（Bootstrap）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E5%88%87%E5%89%B2"><span class="nav-number">1.4.</span> <span class="nav-text">时间切割</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A6%BB%E7%BA%BF-Replay"><span class="nav-number">1.5.</span> <span class="nav-text">离线 Replay</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E-Spark-%E7%9A%84%E7%A6%BB%E7%BA%BF%E8%AF%84%E4%BC%B0%E6%96%B9%E6%B3%95%E5%AE%9E%E6%93%8D"><span class="nav-number">2.</span> <span class="nav-text">基于 Spark 的离线评估方法实操</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">简述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%86%E5%8F%B2%E6%BC%94%E8%BF%9B"><span class="nav-number">1.1.</span> <span class="nav-text">历史演进</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Sora-%E6%80%9D%E8%80%83"><span class="nav-number">1.2.</span> <span class="nav-text">Sora 思考</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%A0%E5%A4%A7%E7%89%B9%E7%82%B9%EF%BC%9A"><span class="nav-number">1.2.1.</span> <span class="nav-text">几大特点：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%BB%B6%E5%B1%95%EF%BC%9A"><span class="nav-number">1.2.2.</span> <span class="nav-text">核心延展：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%80%83%EF%BC%9A"><span class="nav-number">1.2.3.</span> <span class="nav-text">思考：</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
