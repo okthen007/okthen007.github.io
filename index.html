@@ -165,6 +165,106 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2024/03/03/%E6%9C%89%E5%85%B3Sora%E7%9A%84%E4%B8%80%E7%82%B9%E6%80%9D%E8%80%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sure Zheng">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sure's BLOG">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/03/03/%E6%9C%89%E5%85%B3Sora%E7%9A%84%E4%B8%80%E7%82%B9%E6%80%9D%E8%80%83/" class="post-title-link" itemprop="url">有关Sora的一点思考</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2024-03-03 21:24:36 / Modified: 22:08:55" itemprop="dateCreated datePublished" datetime="2024-03-03T21:24:36+08:00">2024-03-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>877</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h1><p>openAI 近期发布的文生视频、图生视频模型，可以以简单的 Prompt 生成逼真的、无ps痕迹的视频，也是如今 AI 界的一大变革。</p>
+<h2 id="历史演进"><a href="#历史演进" class="headerlink" title="历史演进"></a>历史演进</h2><p>文生图的技术，最早可以追溯到 Stable Diffusion模型， 其中大家耳熟能详的 CLIP 模型（多模态模型）主要做的事情是，zero-shot prediction，通过文本特征和图片特征做相关性匹配，进而通过 prompt 对图片进行分类。而 Stable Diffusion 用到的技术主要有两个，一是 Transformer，把 Transformer 架构应用于 CV 领域；二是 图像文本描述的增强，通过文本描述来提升模型的生成能力；文生视频的技术主要在于对时空语义建模，也是使用的 Transformer 架构，首先需要对视频的隐空间表示 patch 化，其次需要利用 Transformer 架构对空间维度和时间维度的语义进行建模；</p>
+<h2 id="Sora-思考"><a href="#Sora-思考" class="headerlink" title="Sora 思考"></a>Sora 思考</h2><p>Sora 简介：text conditional diffusion models: 基于不同时间长度、像素大小、尺寸，使用 transformer 架构 —&gt; 生成分钟级的高保真模型。</p>
+<h3 id="几大特点："><a href="#几大特点：" class="headerlink" title="几大特点："></a>几大特点：</h3><ol>
+<li>视频训练模型新范式：<br>图像数据转Patches，先压缩，浅空间里大量训练，时间、空间提取出来<br>通过扩散模型解压到像素空间<br>resolutions，aspect ratios（不同时间长度、不同像素、不同尺寸）<br>语言理解程度，训练模型做标注，通过 GPT 对短的语言模型进行加长，视频标注和文本对齐。</li>
+<li>通过图片和视频，进行二次加工，通过图片生成动画。</li>
+<li>扩帧已有视频</li>
+<li>视频改造（video editing）</li>
+</ol>
+<h3 id="核心延展："><a href="#核心延展：" class="headerlink" title="核心延展："></a>核心延展：</h3><ul>
+<li>3D 场景一致性（3D一致性）</li>
+<li>前后关联性（long-range coherence and object permanence）</li>
+<li>模拟虚拟世界能力</li>
+</ul>
+<h3 id="思考："><a href="#思考：" class="headerlink" title="思考："></a>思考：</h3><ol>
+<li>sora 需要巨大的算力才能支撑起一分钟的时间窗口，看起来也像是大力出奇迹的作品</li>
+<li>多模态模型，预测是未来趋势，但是从 CLIP 模型开始，小公司就没有那么大的算力来陪跑了，文生视频模型看起来也是算力垄断公司的作品</li>
+<li>Text Encoder，扩散能力、自动标注 是否也将长期成为大模型领域的重点？</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2023/10/19/Checkpoint%E5%8E%9F%E7%90%86%E5%92%8C%E6%9C%BA%E5%88%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1104,112 +1204,6 @@
 <figure class="highlight bash"><figcaption><span>交叉检验接口</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">val cv = new CrossValidator()</span><br><span class="line">  .setEstimator(modelPipeline) <span class="comment"># 评估对象，构建模型pipeline</span></span><br><span class="line">  .setEvaluator(new BinaryClassificationEvaluator)  <span class="comment"># 设置评估所用的方法和指标</span></span><br><span class="line">  .setEstimatorParamMaps(paramGrid) </span><br><span class="line">  .setNumFolds(10)  // Use 3+ <span class="keyword">in</span> practice <span class="comment"># 交叉检验中 k 的值</span></span><br><span class="line">val cvModel = cv.fit(training)</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//找到时间切割点</span><br><span class="line">val quantile = smallSamples.stat.approxQuantile(<span class="string">&quot;timestampLong&quot;</span>, Array(0.8), 0.05)</span><br><span class="line">val splitTimestamp = quantile.apply(0)</span><br><span class="line">//切割样本为训练集和测试集</span><br><span class="line">val training = smallSamples.<span class="built_in">where</span>(col(<span class="string">&quot;timestampLong&quot;</span>) &lt;= splitTimestamp).drop(<span class="string">&quot;timestampLong&quot;</span>)</span><br><span class="line">val <span class="built_in">test</span> = smallSamples.<span class="built_in">where</span>(col(<span class="string">&quot;timestampLong&quot;</span>) &gt; splitTimestamp).drop(<span class="string">&quot;timestampLong&quot;</span>)</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2023/08/09/%E6%9C%89%E5%85%B3Sora%E7%9A%84%E4%B8%80%E7%82%B9%E6%80%9D%E8%80%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Sure Zheng">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sure's BLOG">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/09/%E6%9C%89%E5%85%B3Sora%E7%9A%84%E4%B8%80%E7%82%B9%E6%80%9D%E8%80%83/" class="post-title-link" itemprop="url">有关Sora的一点思考</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-08-09 22:23:57" itemprop="dateCreated datePublished" datetime="2023-08-09T22:23:57+08:00">2023-08-09</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-03 22:05:27" itemprop="dateModified" datetime="2024-03-03T22:05:27+08:00">2024-03-03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>877</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>2 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h1><p>openAI 近期发布的文生视频、图生视频模型，可以以简单的 Prompt 生成逼真的、无ps痕迹的视频，也是如今 AI 界的一大变革。</p>
-<h2 id="历史演进"><a href="#历史演进" class="headerlink" title="历史演进"></a>历史演进</h2><p>文生图的技术，最早可以追溯到 Stable Diffusion模型， 其中大家耳熟能详的 CLIP 模型（多模态模型）主要做的事情是，zero-shot prediction，通过文本特征和图片特征做相关性匹配，进而通过 prompt 对图片进行分类。而 Stable Diffusion 用到的技术主要有两个，一是 Transformer，把 Transformer 架构应用于 CV 领域；二是 图像文本描述的增强，通过文本描述来提升模型的生成能力；文生视频的技术主要在于对时空语义建模，也是使用的 Transformer 架构，首先需要对视频的隐空间表示 patch 化，其次需要利用 Transformer 架构对空间维度和时间维度的语义进行建模；</p>
-<h2 id="Sora-思考"><a href="#Sora-思考" class="headerlink" title="Sora 思考"></a>Sora 思考</h2><p>Sora 简介：text conditional diffusion models: 基于不同时间长度、像素大小、尺寸，使用 transformer 架构 —&gt; 生成分钟级的高保真模型。</p>
-<h3 id="几大特点："><a href="#几大特点：" class="headerlink" title="几大特点："></a>几大特点：</h3><ol>
-<li>视频训练模型新范式：<br>图像数据转Patches，先压缩，浅空间里大量训练，时间、空间提取出来<br>通过扩散模型解压到像素空间<br>resolutions，aspect ratios（不同时间长度、不同像素、不同尺寸）<br>语言理解程度，训练模型做标注，通过 GPT 对短的语言模型进行加长，视频标注和文本对齐。</li>
-<li>通过图片和视频，进行二次加工，通过图片生成动画。</li>
-<li>扩帧已有视频</li>
-<li>视频改造（video editing）</li>
-</ol>
-<h3 id="核心延展："><a href="#核心延展：" class="headerlink" title="核心延展："></a>核心延展：</h3><ul>
-<li>3D 场景一致性（3D一致性）</li>
-<li>前后关联性（long-range coherence and object permanence）</li>
-<li>模拟虚拟世界能力</li>
-</ul>
-<h3 id="思考："><a href="#思考：" class="headerlink" title="思考："></a>思考：</h3><ol>
-<li>sora 需要巨大的算力才能支撑起一分钟的时间窗口，看起来也像是大力出奇迹的作品</li>
-<li>多模态模型，预测是未来趋势，但是从 CLIP 模型开始，小公司就没有那么大的算力来陪跑了，文生视频模型看起来也是算力垄断公司的作品</li>
-<li>Text Encoder，扩散能力、自动标注 是否也将长期成为大模型领域的重点？</li>
-</ol>
-
       
     </div>
 
