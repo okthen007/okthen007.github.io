@@ -130,7 +130,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">16</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">17</span></a>
 
   </li>
         <li class="menu-item menu-item-schedule">
@@ -161,6 +161,107 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2023/08/14/Spark%E4%B8%8E%E7%A6%BB%E7%BA%BF%E8%AF%84%E4%BC%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sure Zheng">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sure's BLOG">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/14/Spark%E4%B8%8E%E7%A6%BB%E7%BA%BF%E8%AF%84%E4%BC%B0/" class="post-title-link" itemprop="url">Spark 与离线评估</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-08-14 21:55:52" itemprop="dateCreated datePublished" datetime="2023-08-14T21:55:52+08:00">2023-08-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-09-11 23:11:51" itemprop="dateModified" datetime="2023-09-11T23:11:51+08:00">2023-09-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Categories/%E7%AE%97%E6%B3%95/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>942</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+<h1 id="模型离线评估方法"><a href="#模型离线评估方法" class="headerlink" title="模型离线评估方法"></a>模型离线评估方法</h1><h2 id="HoldOut-检验"><a href="#HoldOut-检验" class="headerlink" title="HoldOut 检验"></a>HoldOut 检验</h2><p>随机分为，训练集和测试集（70%训练集；30%测试集）</p>
+<h2 id="交叉检验"><a href="#交叉检验" class="headerlink" title="交叉检验"></a>交叉检验</h2><p>消除随机性，k个验证集和测试集</p>
+<h2 id="自助法（Bootstrap）"><a href="#自助法（Bootstrap）" class="headerlink" title="自助法（Bootstrap）"></a>自助法（Bootstrap）</h2><p>自助采样的验证方法，N次有放回的随机抽样（改变原有数据的分布，产生偏差）</p>
+<h2 id="时间切割"><a href="#时间切割" class="headerlink" title="时间切割"></a>时间切割</h2><p>t时刻，t+1时刻（未来信息），分布在 (t0, tn)， 时间切割划分测试集和训练集，切割比例, 3:1 OR 10:1，缺点：评估过程静态</p>
+<h2 id="离线-Replay"><a href="#离线-Replay" class="headerlink" title="离线 Replay"></a>离线 Replay</h2><p>离线状态下对线上更新过程进行仿真，让整个评估过程“动”起来</p>
+<h1 id="基于-Spark-的离线评估方法实操"><a href="#基于-Spark-的离线评估方法实操" class="headerlink" title="基于 Spark 的离线评估方法实操"></a>基于 Spark 的离线评估方法实操</h1><figure class="highlight bash"><figcaption><span>Spark 随机划分测试集和训练集</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">val Array(trainingSamples, testSamples) = samples.randomSplit(Array(0.9, 0.1))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><figcaption><span>交叉检验接口</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">val cv = new CrossValidator()</span><br><span class="line">  .setEstimator(modelPipeline) <span class="comment"># 评估对象，构建模型pipeline</span></span><br><span class="line">  .setEvaluator(new BinaryClassificationEvaluator)  <span class="comment"># 设置评估所用的方法和指标</span></span><br><span class="line">  .setEstimatorParamMaps(paramGrid) </span><br><span class="line">  .setNumFolds(10)  // Use 3+ <span class="keyword">in</span> practice <span class="comment"># 交叉检验中 k 的值</span></span><br><span class="line">val cvModel = cv.fit(training)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//找到时间切割点</span><br><span class="line">val quantile = smallSamples.stat.approxQuantile(<span class="string">&quot;timestampLong&quot;</span>, Array(0.8), 0.05)</span><br><span class="line">val splitTimestamp = quantile.apply(0)</span><br><span class="line">//切割样本为训练集和测试集</span><br><span class="line">val training = smallSamples.<span class="built_in">where</span>(col(<span class="string">&quot;timestampLong&quot;</span>) &lt;= splitTimestamp).drop(<span class="string">&quot;timestampLong&quot;</span>)</span><br><span class="line">val <span class="built_in">test</span> = smallSamples.<span class="built_in">where</span>(col(<span class="string">&quot;timestampLong&quot;</span>) &gt; splitTimestamp).drop(<span class="string">&quot;timestampLong&quot;</span>)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -961,7 +1062,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
