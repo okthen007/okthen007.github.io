@@ -300,7 +300,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-18 22:47:42" itemprop="dateModified" datetime="2024-03-18T22:47:42+08:00">2024-03-18</time>
+                <time title="Modified: 2024-03-18 22:52:07" itemprop="dateModified" datetime="2024-03-18T22:52:07+08:00">2024-03-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -318,14 +318,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>3.3k</span>
+              <span>2.6k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>6 mins.</span>
+              <span>5 mins.</span>
             </span>
 
         </div>
@@ -339,7 +339,7 @@
       
           <h1 id="特征工程和-Embedding"><a href="#特征工程和-Embedding" class="headerlink" title="特征工程和 Embedding"></a>特征工程和 Embedding</h1><p>Embedding 特征向量(Embedding 就是用一个数值向量“表示”一个对象（Object）的方法)，用向量表示一个物体，主要目的是对稀疏特征进行降维，主要可作为推荐系统的召回层或召回策略之一<br>优势在于，通过低维向量表达，能够体现距离的远近</p>
 <p>如何进行 Embedding？<br>流行的词嵌入方法，word2vec，Node2vec，skipgram等，Pytorch 中使用 nn.Embedding()</p>
-<h3 id="word2vec"><a href="#word2vec" class="headerlink" title="word2vec"></a>word2vec</h3><p>Word2vec 模型分为两种形式，CBOW 模型 和 Skip-gram 模型。</p>
+<h3 id="Embedding方法：word2vec"><a href="#Embedding方法：word2vec" class="headerlink" title="Embedding方法：word2vec"></a>Embedding方法：word2vec</h3><p>Word2vec 模型分为两种形式，CBOW 模型 和 Skip-gram 模型。</p>
 <ul>
 <li><p>Word2Vec 样本生产<br>我们从语料库中抽取一个句子，选取一个长度为 2c+1（目标词前后各选 c 个词）的滑动窗口，将滑动窗口由左至右滑动，每移动一次，窗口中的词组就形成了一个训练样本。根据 Skip-gram 模型的理念，中心词决定了它的相邻词，我们就可以根据这个训练样本定义出 Word2vec 模型的输入和输出，输入是样本的中心词，输出是所有的相邻词。</p>
 </li>
@@ -356,9 +356,8 @@
 <li><p>词向量从 Word2vec 模型中提取出来<br>我们往往会把输入向量矩阵转换成词向量查找表（Lookup table，如图 7 所示）。例如，输入向量是 10000 个词组成的 One-hot 向量，隐层维度是 300 维，那么输入层到隐层的权重矩阵为 10000x300 维。在转换为词向量 Lookup table 后，每行的权重即成了对应词的 Embedding 向量。如果我们把这个查找表存储到线上的数据库中，就可以轻松地在推荐物品的过程中使用 Embedding 去计算相似性等重要的特征了。<br><img src="../Pics/%E8%AF%8D%E5%90%91%E9%87%8F%E4%BB%8E%20Word2vec.webp" alt="词向量"></p>
 </li>
 </ul>
+<h3 id="Embedding方法：item2vec"><a href="#Embedding方法：item2vec" class="headerlink" title="Embedding方法：item2vec"></a>Embedding方法：item2vec</h3><p>既然 Word2vec 可以对词“序列”中的词进行 Embedding，那么对于用户购买“序列”中的一个商品，用户观看“序列”中的一个电影，也应该存在相应的 Embedding 方法。<br>Item2vec 可以利用物品的 Embedding 直接求得它们的相似性，或者作为重要的特征输入推荐模型进行训练，这些都有助于提升推荐系统的效果。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">def trainItem2vec(spark, samples, embLength, embOutputPath, saveToRedis, redisKeyPrefix):</span><br><span class="line">    word2vec = Word2Vec().setVectorSize(embLength).setWindowSize(5).setNumIterations(10)</span><br><span class="line">    model = word2vec.fit(samples)</span><br><span class="line">    synonyms = model.findSynonyms(<span class="string">&quot;158&quot;</span>, 20)</span><br><span class="line">    <span class="keyword">for</span> synonym, cosineSimilarity <span class="keyword">in</span> synonyms:</span><br><span class="line">        <span class="built_in">print</span>(synonym, cosineSimilarity)</span><br><span class="line">    embOutputDir = <span class="string">&#x27;/&#x27;</span>.<span class="built_in">join</span>(embOutputPath.<span class="built_in">split</span>(<span class="string">&#x27;/&#x27;</span>)[:-1])</span><br><span class="line">    <span class="keyword">if</span> not os.path.exists(embOutputDir):</span><br><span class="line">        os.makedirs(embOutputDir)</span><br><span class="line">    with open(embOutputPath, <span class="string">&#x27;w&#x27;</span>) as f:</span><br><span class="line">        <span class="keyword">for</span> movie_id <span class="keyword">in</span> model.getVectors():</span><br><span class="line">            vectors = <span class="string">&quot; &quot;</span>.<span class="built_in">join</span>([str(emb) <span class="keyword">for</span> emb <span class="keyword">in</span> model.getVectors()[movie_id]])</span><br><span class="line">            f.write(movie_id + <span class="string">&quot;:&quot;</span> + vectors + <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">    embeddingLSH(spark, model.getVectors())</span><br><span class="line">    <span class="built_in">return</span> model</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><figcaption><span>generate_user_emb</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">def generateUserEmb(spark, rawSampleDataPath, model, embLength, embOutputPath, saveToRedis, redisKeyPrefix):</span><br><span class="line">    ratingSamples = spark.read.format(<span class="string">&quot;csv&quot;</span>).option(<span class="string">&quot;header&quot;</span>, <span class="string">&quot;true&quot;</span>).load(rawSampleDataPath)</span><br><span class="line">    Vectors_list = []</span><br><span class="line">    <span class="keyword">for</span> key, value <span class="keyword">in</span> model.getVectors().items():</span><br><span class="line">        Vectors_list.append((key, list(value)))</span><br><span class="line">    fields = [</span><br><span class="line">        StructField(<span class="string">&#x27;movieId&#x27;</span>, StringType(), False),</span><br><span class="line">        StructField(<span class="string">&#x27;emb&#x27;</span>, ArrayType(FloatType()), False)</span><br><span class="line">    ]</span><br><span class="line">    schema = StructType(fields)</span><br><span class="line">    Vectors_df = spark.createDataFrame(Vectors_list, schema=schema)</span><br><span class="line">    ratingSamples = ratingSamples.<span class="built_in">join</span>(Vectors_df, on=<span class="string">&#x27;movieId&#x27;</span>, how=<span class="string">&#x27;inner&#x27;</span>)</span><br><span class="line">    result = ratingSamples.<span class="keyword">select</span>(<span class="string">&#x27;userId&#x27;</span>, <span class="string">&#x27;emb&#x27;</span>).rdd.map(lambda x: (x[0], x[1])) \</span><br><span class="line">        .reduceByKey(lambda a, b: [a[i] + b[i] <span class="keyword">for</span> i <span class="keyword">in</span> range(len(a))]).collect()</span><br><span class="line">    with open(embOutputPath, <span class="string">&#x27;w&#x27;</span>) as f:</span><br><span class="line">        <span class="keyword">for</span> row <span class="keyword">in</span> result:</span><br><span class="line">            vectors = <span class="string">&quot; &quot;</span>.<span class="built_in">join</span>([str(emb) <span class="keyword">for</span> emb <span class="keyword">in</span> row[1]])</span><br><span class="line">            f.write(row[0] + <span class="string">&quot;:&quot;</span> + vectors + <span class="string">&quot;\n&quot;</span>)</span><br></pre></td></tr></table></figure>
 
 <h2 id="Embedding-优势"><a href="#Embedding-优势" class="headerlink" title="Embedding 优势"></a>Embedding 优势</h2><p>Embedding 是处理稀疏特征的利器。 几乎所有深度学习推荐模型都会由 Embedding 层负责将稀疏高维特征向量转换成稠密低维特征向量。<br>Embedding 可以融合大量有价值信息，本身就是极其重要的特征向量 。 相比由原始信息直接处理得来的特征向量，Embedding 的表达能力更强，特别是 Graph Embedding 技术被提出后，Embedding 几乎可以引入任何信息进行编码，使其本身就包含大量有价值的信息，所以通过预训练得到的 Embedding 向量本身就是极其重要的特征向量。</p>
 <h2 id="实时特征加工"><a href="#实时特征加工" class="headerlink" title="实时特征加工"></a>实时特征加工</h2><p>实时特征加工的源头多为埋点数据落的 Kafka 数据（实时流-多为json格式），通过 flink 任务加工成用户所有的 kv 格式数据，在 ctr 场景中，key多为用户pin，value多为用户特征值，举例value可能为 0和1 在性别场景下</p>
@@ -867,7 +866,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-09-11 23:11:35" itemprop="dateModified" datetime="2023-09-11T23:11:35+08:00">2023-09-11</time>
+                <time title="Modified: 2024-03-18 22:49:19" itemprop="dateModified" datetime="2024-03-18T22:49:19+08:00">2024-03-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
