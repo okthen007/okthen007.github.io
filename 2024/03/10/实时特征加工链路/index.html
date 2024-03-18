@@ -27,15 +27,15 @@
 <meta property="og:site_name" content="Sure&#39;s BLOG">
 <meta property="og:description" content="特征工程和 EmbeddingEmbedding 特征向量(Embedding 就是用一个数值向量“表示”一个对象（Object）的方法)，用向量表示一个物体，主要目的是对稀疏特征进行降维，主要可作为推荐系统的召回层或召回策略之一优势在于，通过低维向量表达，能够体现距离的远近 如何进行 Embedding？流行的词嵌入方法，word2vec，Node2vec，skipgram等，Pytorch 中">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://shuo-shuo.site/2024/03/10/%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%8A%A0%E5%B7%A5%E9%93%BE%E8%B7%AF/image.png">
+<meta property="og:image" content="http://shuo-shuo.site/2024/03/10/Pics/word2vec-model.png">
 <meta property="article:published_time" content="2024-03-10T14:10:54.000Z">
-<meta property="article:modified_time" content="2024-03-18T14:34:46.854Z">
+<meta property="article:modified_time" content="2024-03-18T14:39:26.611Z">
 <meta property="article:author" content="Sure Zheng">
 <meta property="article:tag" content="技术学习">
 <meta property="article:tag" content="存储方式">
 <meta property="article:tag" content="数据加工">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://shuo-shuo.site/2024/03/10/%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%8A%A0%E5%B7%A5%E9%93%BE%E8%B7%AF/image.png">
+<meta name="twitter:image" content="http://shuo-shuo.site/2024/03/10/Pics/word2vec-model.png">
 
 <link rel="canonical" href="http://shuo-shuo.site/2024/03/10/%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%8A%A0%E5%B7%A5%E9%93%BE%E8%B7%AF/">
 
@@ -205,7 +205,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-18 22:34:46" itemprop="dateModified" datetime="2024-03-18T22:34:46+08:00">2024-03-18</time>
+                <time title="Modified: 2024-03-18 22:39:26" itemprop="dateModified" datetime="2024-03-18T22:39:26+08:00">2024-03-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -246,8 +246,8 @@
 <p>如何进行 Embedding？<br>流行的词嵌入方法，word2vec，Node2vec，skipgram等，Pytorch 中使用 nn.Embedding()</p>
 <h3 id="word2vec"><a href="#word2vec" class="headerlink" title="word2vec"></a>word2vec</h3><p>Word2vec 模型分为两种形式，CBOW 模型 和 Skip-gram 模型。</p>
 <ul>
-<li>样本生产<br>我们从语料库中抽取一个句子，选取一个长度为 2c+1（目标词前后各选 c 个词）的滑动窗口，将滑动窗口由左至右滑动，每移动一次，窗口中的词组就形成了一个训练样本。根据 Skip-gram 模型的理念，中心词决定了它的相邻词，我们就可以根据这个训练样本定义出 Word2vec 模型的输入和输出，输入是样本的中心词，输出是所有的相邻词。</li>
-<li>结构<br><img src="image.png" alt="Alt text"></li>
+<li>Word2Vec 样本生产<br>我们从语料库中抽取一个句子，选取一个长度为 2c+1（目标词前后各选 c 个词）的滑动窗口，将滑动窗口由左至右滑动，每移动一次，窗口中的词组就形成了一个训练样本。根据 Skip-gram 模型的理念，中心词决定了它的相邻词，我们就可以根据这个训练样本定义出 Word2vec 模型的输入和输出，输入是样本的中心词，输出是所有的相邻词。</li>
+<li>Word2Vec 模型结构<br>三层神经网络。<br><img src="../Pics/word2vec-model.png" alt="word2vec"></li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">def trainItem2vec(spark, samples, embLength, embOutputPath, saveToRedis, redisKeyPrefix):</span><br><span class="line">    word2vec = Word2Vec().setVectorSize(embLength).setWindowSize(5).setNumIterations(10)</span><br><span class="line">    model = word2vec.fit(samples)</span><br><span class="line">    synonyms = model.findSynonyms(<span class="string">&quot;158&quot;</span>, 20)</span><br><span class="line">    <span class="keyword">for</span> synonym, cosineSimilarity <span class="keyword">in</span> synonyms:</span><br><span class="line">        <span class="built_in">print</span>(synonym, cosineSimilarity)</span><br><span class="line">    embOutputDir = <span class="string">&#x27;/&#x27;</span>.<span class="built_in">join</span>(embOutputPath.<span class="built_in">split</span>(<span class="string">&#x27;/&#x27;</span>)[:-1])</span><br><span class="line">    <span class="keyword">if</span> not os.path.exists(embOutputDir):</span><br><span class="line">        os.makedirs(embOutputDir)</span><br><span class="line">    with open(embOutputPath, <span class="string">&#x27;w&#x27;</span>) as f:</span><br><span class="line">        <span class="keyword">for</span> movie_id <span class="keyword">in</span> model.getVectors():</span><br><span class="line">            vectors = <span class="string">&quot; &quot;</span>.<span class="built_in">join</span>([str(emb) <span class="keyword">for</span> emb <span class="keyword">in</span> model.getVectors()[movie_id]])</span><br><span class="line">            f.write(movie_id + <span class="string">&quot;:&quot;</span> + vectors + <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">    embeddingLSH(spark, model.getVectors())</span><br><span class="line">    <span class="built_in">return</span> model</span><br></pre></td></tr></table></figure>
 
