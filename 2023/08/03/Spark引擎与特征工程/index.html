@@ -27,12 +27,14 @@
 <meta property="og:site_name" content="Sure&#39;s BLOG">
 <meta property="og:description" content="Spark引擎与大数据分布式计算平台（通过网络通信交换数据）  架构：manager node：调度组织；worker node：调度执行，结果返回给 Driver Stage内：计算节点并行工作：主机、docker container；map&#x2F;filter 需要逐条数据处理，可以并行处理 Stage 外：join 需要 shuffle&#x2F;reduce，消耗资源，shuffle汇总统计结果 -&amp;gt">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://shuo-shuo.site/2023/08/03/Pics/spark%E5%A4%84%E7%90%86Embedding.png">
 <meta property="article:published_time" content="2023-08-03T13:48:25.000Z">
-<meta property="article:modified_time" content="2023-08-04T15:07:26.638Z">
+<meta property="article:modified_time" content="2024-03-18T15:08:44.915Z">
 <meta property="article:author" content="Sure Zheng">
 <meta property="article:tag" content="计算引擎">
 <meta property="article:tag" content="技术学习">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://shuo-shuo.site/2023/08/03/Pics/spark%E5%A4%84%E7%90%86Embedding.png">
 
 <link rel="canonical" href="http://shuo-shuo.site/2023/08/03/Spark%E5%BC%95%E6%93%8E%E4%B8%8E%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B/">
 
@@ -202,7 +204,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-08-04 23:07:26" itemprop="dateModified" datetime="2023-08-04T23:07:26+08:00">2023-08-04</time>
+                <time title="Modified: 2024-03-18 23:08:44" itemprop="dateModified" datetime="2024-03-18T23:08:44+08:00">2024-03-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -277,7 +279,7 @@
 <li>分桶：MinMaxScale、QuantileDiscretizer</li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">def ratingFeatures(samples:DataFrame): Unit =&#123;</span><br><span class="line">  samples.printSchema()</span><br><span class="line">  samples.show(10)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  //利用打分表ratings计算电影的平均分、被打分次数等数值型特征</span><br><span class="line">  val movieFeatures = samples.groupBy(col(<span class="string">&quot;movieId&quot;</span>))</span><br><span class="line">    .agg(count(lit(1)).as(<span class="string">&quot;ratingCount&quot;</span>),</span><br><span class="line">      avg(col(<span class="string">&quot;rating&quot;</span>)).as(<span class="string">&quot;avgRating&quot;</span>),</span><br><span class="line">      variance(col(<span class="string">&quot;rating&quot;</span>)).as(<span class="string">&quot;ratingVar&quot;</span>))</span><br><span class="line">      .withColumn(<span class="string">&quot;avgRatingVec&quot;</span>, double2vec(col(<span class="string">&quot;avgRating&quot;</span>)))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  movieFeatures.show(10)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  //分桶处理，创建QuantileDiscretizer进行分桶，将打分次数这一特征分到100个桶中</span><br><span class="line">  val ratingCountDiscretizer = new QuantileDiscretizer()</span><br><span class="line">    .setInputCol(<span class="string">&quot;ratingCount&quot;</span>)</span><br><span class="line">    .setOutputCol(<span class="string">&quot;ratingCountBucket&quot;</span>)</span><br><span class="line">    .setNumBuckets(100)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  //归一化处理，创建MinMaxScaler进行归一化，将平均得分进行归一化</span><br><span class="line">  val ratingScaler = new MinMaxScaler()</span><br><span class="line">    .setInputCol(<span class="string">&quot;avgRatingVec&quot;</span>)</span><br><span class="line">    .setOutputCol(<span class="string">&quot;scaleAvgRating&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  //创建一个pipeline，依次执行两个特征处理过程</span><br><span class="line">  val pipelineStage: Array[PipelineStage] = Array(ratingCountDiscretizer, ratingScaler)</span><br><span class="line">  val featurePipeline = new Pipeline().setStages(pipelineStage)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  val movieProcessedFeatures = featurePipeline.fit(movieFeatures).transform(movieFeatures)</span><br><span class="line">  //打印最终结果</span><br><span class="line">  movieProcessedFeatures.show(</span><br></pre></td></tr></table></figure>
-<h1 id="Spark生成Item2Vec和Graph-Embedding"><a href="#Spark生成Item2Vec和Graph-Embedding" class="headerlink" title="Spark生成Item2Vec和Graph Embedding"></a>Spark生成Item2Vec和Graph Embedding</h1><p>优势大于pytorch、tensorflow，处理大数据方式有优势</p>
+<h1 id="Spark生成Item2Vec和Graph-Embedding"><a href="#Spark生成Item2Vec和Graph-Embedding" class="headerlink" title="Spark生成Item2Vec和Graph Embedding"></a>Spark生成Item2Vec和Graph Embedding</h1><p>优势大于pytorch、tensorflow，处理大数据方式有优势<br><img src="../Pics/spark%E5%A4%84%E7%90%86Embedding.png" alt="Spark处理Embedding"></p>
 <h1 id="Item2Vec"><a href="#Item2Vec" class="headerlink" title="Item2Vec"></a>Item2Vec</h1><h2 id="Item2Vec：处理数据"><a href="#Item2Vec：处理数据" class="headerlink" title="Item2Vec：处理数据"></a>Item2Vec：处理数据</h2><p>“文本句子等序列数据”，学习到物品间相似性。</p>
 <ul>
 <li>举例<br>1、过滤掉评分低电影<br>2、评分好的电影靠近一些<br>3、评分差的电影和评分好的电影不要在序列中结对出现</li>
