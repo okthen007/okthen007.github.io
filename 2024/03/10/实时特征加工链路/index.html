@@ -28,8 +28,9 @@
 <meta property="og:description" content="特征工程和 EmbeddingEmbedding 特征向量(Embedding 就是用一个数值向量“表示”一个对象（Object）的方法)，用向量表示一个物体，主要目的是对稀疏特征进行降维，主要可作为推荐系统的召回层或召回策略之一优势在于，通过低维向量表达，能够体现距离的远近 如何进行 Embedding？流行的词嵌入方法，word2vec，Node2vec，skipgram等，Pytorch 中">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://shuo-shuo.site/2024/03/10/Pics/word2vec-model.png">
+<meta property="og:image" content="http://shuo-shuo.site/2024/03/10/Pics/%E8%AF%8D%E5%90%91%E9%87%8F%E4%BB%8E%20Word2vec.webp">
 <meta property="article:published_time" content="2024-03-10T14:10:54.000Z">
-<meta property="article:modified_time" content="2024-03-18T14:39:26.611Z">
+<meta property="article:modified_time" content="2024-03-18T14:47:42.057Z">
 <meta property="article:author" content="Sure Zheng">
 <meta property="article:tag" content="技术学习">
 <meta property="article:tag" content="存储方式">
@@ -205,7 +206,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-18 22:39:26" itemprop="dateModified" datetime="2024-03-18T22:39:26+08:00">2024-03-18</time>
+                <time title="Modified: 2024-03-18 22:47:42" itemprop="dateModified" datetime="2024-03-18T22:47:42+08:00">2024-03-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -223,14 +224,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.7k</span>
+              <span>3.3k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>5 mins.</span>
+              <span>6 mins.</span>
             </span>
 
         </div>
@@ -246,8 +247,20 @@
 <p>如何进行 Embedding？<br>流行的词嵌入方法，word2vec，Node2vec，skipgram等，Pytorch 中使用 nn.Embedding()</p>
 <h3 id="word2vec"><a href="#word2vec" class="headerlink" title="word2vec"></a>word2vec</h3><p>Word2vec 模型分为两种形式，CBOW 模型 和 Skip-gram 模型。</p>
 <ul>
-<li>Word2Vec 样本生产<br>我们从语料库中抽取一个句子，选取一个长度为 2c+1（目标词前后各选 c 个词）的滑动窗口，将滑动窗口由左至右滑动，每移动一次，窗口中的词组就形成了一个训练样本。根据 Skip-gram 模型的理念，中心词决定了它的相邻词，我们就可以根据这个训练样本定义出 Word2vec 模型的输入和输出，输入是样本的中心词，输出是所有的相邻词。</li>
-<li>Word2Vec 模型结构<br>三层神经网络。<br><img src="../Pics/word2vec-model.png" alt="word2vec"></li>
+<li><p>Word2Vec 样本生产<br>我们从语料库中抽取一个句子，选取一个长度为 2c+1（目标词前后各选 c 个词）的滑动窗口，将滑动窗口由左至右滑动，每移动一次，窗口中的词组就形成了一个训练样本。根据 Skip-gram 模型的理念，中心词决定了它的相邻词，我们就可以根据这个训练样本定义出 Word2vec 模型的输入和输出，输入是样本的中心词，输出是所有的相邻词。</p>
+</li>
+<li><p>Word2Vec 模型结构<br>三层神经网络。</p>
+</li>
+<li><p>它的输入层和输出层的维度都是 V，这个 V 其实就是语料库词典的大小</p>
+</li>
+<li><p>Word2vec 模型解决的是一个多分类问题</p>
+</li>
+<li><p>隐层的维度是 N，N 的选择就需要一定的调参能力了，我们需要对模型的效果和模型的复杂度进行权衡，来决定最后 N 的取值，并且最终每个词的 Embedding 向量维度也由 N 来决定。</p>
+</li>
+<li><p>隐层神经元是没有激活函数的，或者说采用了输入即输出的恒等函数作为激活函数，而输出层神经元采用了 softmax 作为激活函数。<br><img src="../Pics/word2vec-model.png" alt="word2vec"><br>这个由输入词 WI 预测输出词 WO 的条件概率，其实就是 Word2vec 神经网络要表达的东西。我们通过极大似然的方法去最大化这个条件概率，就能够让相似的词的内积距离更接近，这就是我们希望 Word2vec 神经网络学到的。<br>进阶学法：为了节约训练时间，Word2vec 经常会采用负采样（Negative Sampling）或者分层 softmax（Hierarchical Softmax）的训练方法。</p>
+</li>
+<li><p>词向量从 Word2vec 模型中提取出来<br>我们往往会把输入向量矩阵转换成词向量查找表（Lookup table，如图 7 所示）。例如，输入向量是 10000 个词组成的 One-hot 向量，隐层维度是 300 维，那么输入层到隐层的权重矩阵为 10000x300 维。在转换为词向量 Lookup table 后，每行的权重即成了对应词的 Embedding 向量。如果我们把这个查找表存储到线上的数据库中，就可以轻松地在推荐物品的过程中使用 Embedding 去计算相似性等重要的特征了。<br><img src="../Pics/%E8%AF%8D%E5%90%91%E9%87%8F%E4%BB%8E%20Word2vec.webp" alt="词向量"></p>
+</li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">def trainItem2vec(spark, samples, embLength, embOutputPath, saveToRedis, redisKeyPrefix):</span><br><span class="line">    word2vec = Word2Vec().setVectorSize(embLength).setWindowSize(5).setNumIterations(10)</span><br><span class="line">    model = word2vec.fit(samples)</span><br><span class="line">    synonyms = model.findSynonyms(<span class="string">&quot;158&quot;</span>, 20)</span><br><span class="line">    <span class="keyword">for</span> synonym, cosineSimilarity <span class="keyword">in</span> synonyms:</span><br><span class="line">        <span class="built_in">print</span>(synonym, cosineSimilarity)</span><br><span class="line">    embOutputDir = <span class="string">&#x27;/&#x27;</span>.<span class="built_in">join</span>(embOutputPath.<span class="built_in">split</span>(<span class="string">&#x27;/&#x27;</span>)[:-1])</span><br><span class="line">    <span class="keyword">if</span> not os.path.exists(embOutputDir):</span><br><span class="line">        os.makedirs(embOutputDir)</span><br><span class="line">    with open(embOutputPath, <span class="string">&#x27;w&#x27;</span>) as f:</span><br><span class="line">        <span class="keyword">for</span> movie_id <span class="keyword">in</span> model.getVectors():</span><br><span class="line">            vectors = <span class="string">&quot; &quot;</span>.<span class="built_in">join</span>([str(emb) <span class="keyword">for</span> emb <span class="keyword">in</span> model.getVectors()[movie_id]])</span><br><span class="line">            f.write(movie_id + <span class="string">&quot;:&quot;</span> + vectors + <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">    embeddingLSH(spark, model.getVectors())</span><br><span class="line">    <span class="built_in">return</span> model</span><br></pre></td></tr></table></figure>
 
