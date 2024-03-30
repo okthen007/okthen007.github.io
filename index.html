@@ -125,12 +125,12 @@
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/Categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">7</span></a>
+    <a href="/Categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">8</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">17</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">18</span></a>
 
   </li>
         <li class="menu-item menu-item-schedule">
@@ -161,6 +161,104 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2024/03/31/%E6%B5%85%E8%B0%88%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86-dataservice/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sure Zheng">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sure's BLOG">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/03/31/%E6%B5%85%E8%B0%88%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86-dataservice/" class="post-title-link" itemprop="url">浅谈分布式数据预处理-dataservice</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2024-03-31 00:12:01 / Modified: 00:21:01" itemprop="dateCreated datePublished" datetime="2024-03-31T00:12:01+08:00">2024-03-31</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Categories/%E7%AE%97%E6%B3%95/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Categories/%E7%AE%97%E6%B3%95/%E5%A4%A7%E6%95%B0%E6%8D%AE/%E6%A0%B7%E6%9C%AC%E5%8A%A0%E9%80%9F/" itemprop="url" rel="index"><span itemprop="name">样本加速</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1.1k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Dataservice-简述"><a href="#Dataservice-简述" class="headerlink" title="Dataservice 简述"></a>Dataservice 简述</h1><p>Dataservice 模块是 Tensorflow 2.3 版本中的一个重要部分，核心功能是实现分布式预处理 pipeline，核心解决问题还是数据处理 IO 问题，和大数据处理中的 Mapreduce 有点相像，核心概念是 JobTracker, TaskTrackier 和 TaskRunner；</p>
+<h2 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h2><p>在TF Dataservice中也有着相对应的核心概念，涉及到进程/线程实体的有Dispatcher，Worker，TaskRunner；涉及到任务概念的有Job、Task以及Dataset。</p>
+<ul>
+<li>Dataset<br>Tensorflow中采用了类似于Spark中RDD的思想：即对整个Dataset实现处理变换；Dataset只是定义着基础的操作，而关于并发处理等制实际上是在Dataset上封装的一层Iterator里进行实现；</li>
+<li>Job<br>Job是Dataservice中对于数据处理pipeline这个层面的概念抽象。相当于一系列数据处理操作的集合就是一个Job</li>
+<li>Task<br>一个Job是会对应着多个Task的。比如我现在使用8个进程去并行执行数据读取，那么就会有8个Task</li>
+</ul>
+<h2 id="任务执行"><a href="#任务执行" class="headerlink" title="任务执行"></a>任务执行</h2><p>Dataservice中采用几乎和Spark运行一一对应的概念，其中Dispatcher对应JobTracker，Worker对应TaskTracker，TaskRunner对应TaskRunner。只不过在TF中，worker接收到一个Task之后不需要重新起一个JVM来执行代码，而是直接进行函数调用即可。整体而言TFDataservice中的分布式数据处理的架构如下图所示。这个图看起来有点乱，但是基本上就描述清了TFDataservice中的设计。Dispatcher和Worker都是两个RPC Server。Dataset和Dispatcher，Dispatcher和Worker以及Dataset和Worker之间都是采用RPC调用进行通信。</p>
+<h2 id="数据读取流程"><a href="#数据读取流程" class="headerlink" title="数据读取流程"></a>数据读取流程</h2><p>当Dataset被迭代的时候，Dataset会直接和对应的worker进行通信，调用Worker的GetElement的RPC方法直接获取数据；<br>实际上当我们创建了一个DataServiceDataset的时候，该Dataset也会定期和Dispatcher进行Heartbeat通信。在非RoundRobin的读取方式下，Dataset与Dispatcher通信的核心目的是知道自己的Job被创建了哪些Task。当Dispatcher接收到来自JobClient的Heartbeat时，会返回给Dataset所有其Job相关的Task。</p>
+<h2 id="Pytorch-场景很难做到的原因待探索"><a href="#Pytorch-场景很难做到的原因待探索" class="headerlink" title="Pytorch 场景很难做到的原因待探索"></a>Pytorch 场景很难做到的原因待探索</h2>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1205,145 +1303,6 @@ Embedding 可以是实时特征嘛？如何实时读取 Embedding 特征？向�
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2023/08/14/ClickHouse%E4%B8%8EDoris%E6%95%B0%E6%8D%AE%E5%BA%93%E6%B7%B1%E5%BA%A6%E5%88%86%E6%9E%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Sure Zheng">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sure's BLOG">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/14/ClickHouse%E4%B8%8EDoris%E6%95%B0%E6%8D%AE%E5%BA%93%E6%B7%B1%E5%BA%A6%E5%88%86%E6%9E%90/" class="post-title-link" itemprop="url">ClickHouse 与 Doris 数据库深度分析</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-08-14 22:30:35" itemprop="dateCreated datePublished" datetime="2023-08-14T22:30:35+08:00">2023-08-14</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-09-11 23:12:15" itemprop="dateModified" datetime="2023-09-11T23:12:15+08:00">2023-09-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/OLAP/" itemprop="url" rel="index"><span itemprop="name">OLAP</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.5k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>5 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="OLAP-数据库（计算-amp-存储一体）"><a href="#OLAP-数据库（计算-amp-存储一体）" class="headerlink" title="OLAP 数据库（计算 &amp; 存储一体）"></a>OLAP 数据库（计算 &amp; 存储一体）</h1><h2 id="ClickHouse-几大特点（By-Yandex）："><a href="#ClickHouse-几大特点（By-Yandex）：" class="headerlink" title="ClickHouse 几大特点（By Yandex）："></a>ClickHouse 几大特点（By Yandex）：</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><p>起源于 网站流量分析服务</p>
-<ul>
-<li>MPP 架构（列存储）</li>
-<li>数据 “批” 写入（写入太频繁会导致小文件）</li>
-<li>宽表，明细表存储</li>
-<li>大数据量单表聚合查询</li>
-<li>对数据一致性要求低</li>
-<li>支持 Ad-hoc 查询</li>
-<li>向量化执行引擎</li>
-</ul>
-<h3 id="局限性"><a href="#局限性" class="headerlink" title="局限性"></a>局限性</h3><ul>
-<li>避免多表查询</li>
-<li>避免高并发数据查询</li>
-</ul>
-<h3 id="业务研发中局限性"><a href="#业务研发中局限性" class="headerlink" title="业务研发中局限性"></a>业务研发中局限性</h3><ul>
-<li>spark 不支持处理 CK uint64的格式</li>
-<li>flink sql 不支持处理 map、tuple 类型的数据</li>
-</ul>
-<h3 id="实操"><a href="#实操" class="headerlink" title="实操"></a>实操</h3><figure class="highlight bash"><figcaption><span>建本地表</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE IF NOT EXISTS zypp_zzh.zs_zypprb_sku_ord_v1_local ON CLUSTER LF0_CK_Pub_15 (</span><br><span class="line">  dates String,</span><br><span class="line">  sale_ord_id String,</span><br><span class="line">  item_sku_id String,</span><br><span class="line">  gmv UInt64,</span><br><span class="line">  rev UInt64,</span><br><span class="line">  zm UInt64,</span><br><span class="line">  biaoji String,</span><br><span class="line">  daiding2 String,</span><br><span class="line">  daiding3 String,</span><br><span class="line">  zm_notax UInt64,</span><br><span class="line">  dt String,</span><br><span class="line">  channel String</span><br><span class="line">) ENGINE = ReplicatedMergeTree(<span class="string">&#x27;/clickhouse/LF0_CK_Pub_15/jdob_ha/zypp_zzh/zs_zypprb_sku_ord_v1_local/&#123;shard&#125;&#x27;</span>, <span class="string">&#x27;&#123;replica&#125;&#x27;</span>) </span><br><span class="line">// jdob_ha，固定</span><br><span class="line">PARTITION BY (dt, channel)</span><br><span class="line">ORDER BY (gmv) TTL toDate(dt) + INTERVAL 720 DAY </span><br><span class="line">SETTINGS storage_policy =<span class="string">&#x27;jdob_ha&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><figcaption><span>建分布式表</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE IF NOT EXISTS zypp_zzh.zs_zypprb_sku_ord_v1_dist ON CLUSTER LF0_CK_Pub_15 (</span><br><span class="line">  dates String,</span><br><span class="line">  sale_ord_id String,</span><br><span class="line">  item_sku_id String,</span><br><span class="line">  gmv UInt64,</span><br><span class="line">  rev UInt64,</span><br><span class="line">  zm UInt64,</span><br><span class="line">  biaoji String,</span><br><span class="line">  daiding2 String,</span><br><span class="line">  daiding3 String,</span><br><span class="line">  zm_notax UInt64,</span><br><span class="line">  dt String,</span><br><span class="line">  channel String</span><br><span class="line">) ENGINE = Distributed(</span><br><span class="line">  LF0_CK_Pub_15,</span><br><span class="line">  zypp_zzh,</span><br><span class="line">  zs_zypprb_sku_ord_v1_local,</span><br><span class="line">  rand()</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<h2 id="Doris-几大特点（By-Baidu）："><a href="#Doris-几大特点（By-Baidu）：" class="headerlink" title="Doris 几大特点（By Baidu）："></a>Doris 几大特点（By Baidu）：</h2><p>源自在线广告系统，偏交易系统数据分析</p>
-<ul>
-<li>MPP 架构（列存储）</li>
-<li>数据 “批” 写入（写入太频繁会导致小文件）</li>
-<li>主键更新（merge on read）</li>
-<li>支持 Ad-hoc 查询</li>
-<li>支持原生导数功能</li>
-</ul>
-<h2 id="OLAP-数据库业务场景"><a href="#OLAP-数据库业务场景" class="headerlink" title="OLAP 数据库业务场景"></a>OLAP 数据库业务场景</h2><ul>
-<li>主要用来做快速即席查询（Ad-Hoc 产品）</li>
-<li>用来作为实时数据仓库的选型</li>
-<li>可以作为 实时看板、大屏的 数据源</li>
-<li>用户画像（一张或多张用户的特征表），用户数据的圈人服务（将数据同步到 CK 进行聚合查询、快速圈人）</li>
-<li>实时监控（Flink -&gt; Grafana）</li>
-<li>用户行为分析（路径分析、漏斗分析）</li>
-</ul>
-<h3 id="实操-1"><a href="#实操-1" class="headerlink" title="实操"></a>实操</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE IF NOT EXISTS test_doris.example_tbl</span><br><span class="line">(</span><br><span class="line">    `timestamp` DATE NOT NULL COMMENT <span class="string">&quot;[&#x27;0000-01-01&#x27;, &#x27;9999-12-31&#x27;]&quot;</span>,</span><br><span class="line">    `<span class="built_in">type</span>` TINYINT NOT NULL COMMENT <span class="string">&quot;[-128, 127]&quot;</span>,</span><br><span class="line">    `error_code` INT COMMENT <span class="string">&quot;[-2147483648, 2147483647]&quot;</span>,</span><br><span class="line">    `error_msg` VARCHAR(300) COMMENT <span class="string">&quot;[1-65533]&quot;</span>,</span><br><span class="line">    `op_id` BIGINT COMMENT <span class="string">&quot;[-9223372036854775808, 9223372036854775807]&quot;</span>,</span><br><span class="line">    `op_time` DATETIME COMMENT <span class="string">&quot;[&#x27;0000-01-01 00:00:00&#x27;, &#x27;9999-12-31 23:59:59&#x27;]&quot;</span>,</span><br><span class="line">    `target` <span class="built_in">float</span> COMMENT <span class="string">&quot;4 字节&quot;</span>,</span><br><span class="line">    `<span class="built_in">source</span>` double COMMENT <span class="string">&quot;8 字节&quot;</span>,</span><br><span class="line">    `lost_cost` decimal(12,2) COMMENT <span class="string">&quot;&quot;</span>,</span><br><span class="line">    `remark` string COMMENT <span class="string">&quot;1m size&quot;</span>,</span><br><span class="line">    `op_userid` LARGEINT COMMENT <span class="string">&quot;[-2^127 + 1 ~ 2^127 - 1]&quot;</span>,</span><br><span class="line">    `plate` SMALLINT COMMENT <span class="string">&quot;[-32768, 32767]&quot;</span>,</span><br><span class="line">    `iscompleted` boolean COMMENT <span class="string">&quot;true 或者 false&quot;</span></span><br><span class="line">)</span><br><span class="line">DUPLICATE KEY(`timestamp`, `<span class="built_in">type</span>`)</span><br><span class="line">DISTRIBUTED BY HASH(`<span class="built_in">type</span>`) BUCKETS 1</span><br><span class="line">PROPERTIES (</span><br><span class="line">    <span class="string">&quot;replication_allocation&quot;</span> = <span class="string">&quot;tag.location.default: 1&quot;</span></span><br><span class="line">); </span><br></pre></td></tr></table></figure>
-
-
-<h1 id="ClickHouse-VS-Doris-VS-StarRocks"><a href="#ClickHouse-VS-Doris-VS-StarRocks" class="headerlink" title="ClickHouse VS Doris VS StarRocks"></a>ClickHouse VS Doris VS StarRocks</h1><ul>
-<li>都是 MPP 架构数据库</li>
-<li>StarRocks 建立在 Hadoop 之上，通过 HDFS来存储数据</li>
-<li>CK在查询时，需要去除重复数据；Doris在insert时做聚合；</li>
-<li>StarRocks优势：兼容 Mysql 协议；全面向量化执行；丰富数据模型（明细、聚合、主键、更新模型[merge on read]）</li>
-<li>ClickHouse优势：主索引&amp;二级索引；MergeTree表；计算算子全面向量化</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1413,14 +1372,14 @@ Embedding 可以是实时特征嘛？如何实时读取 Embedding 特征？向�
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">18</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/Categories/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
