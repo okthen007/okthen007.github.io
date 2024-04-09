@@ -130,7 +130,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">18</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">19</span></a>
 
   </li>
         <li class="menu-item menu-item-schedule">
@@ -161,6 +161,97 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2024/04/06/%E6%A0%B7%E6%9C%AC%E5%B7%A5%E7%A8%8B%E7%AE%80%E8%BF%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sure Zheng">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sure's BLOG">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/04/06/%E6%A0%B7%E6%9C%AC%E5%B7%A5%E7%A8%8B%E7%AE%80%E8%BF%B0/" class="post-title-link" itemprop="url">样本工程简述</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2024-04-06 21:48:09 / Modified: 22:01:52" itemprop="dateCreated datePublished" datetime="2024-04-06T21:48:09+08:00">2024-04-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Categories/%E7%AE%97%E6%B3%95/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1.2k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="训练样本"><a href="#训练样本" class="headerlink" title="训练样本"></a>训练样本</h2><p>深度模型通常在 TensorFlow 中训练，样本处理通常 Pyspark、Spark、Flink 等技术处理数据，但是训练样本链路也可以通过 TensorFlow 中的 OP 算子直接进行数据处理，从而保证离在线一致性。</p>
+<h3 id="特征"><a href="#特征" class="headerlink" title="特征"></a>特征</h3><p>特征包括 “物品特征”、“用户特征（用户历史行为特征）”、“场景特征”</p>
+<h2 id="生成样本时避免引入未来信息"><a href="#生成样本时避免引入未来信息" class="headerlink" title="生成样本时避免引入未来信息"></a>生成样本时避免引入未来信息</h2><p>如果我们在 t 时刻进行模型预测，那么 t+1 时刻的信息就是未来信息。这个问题在模型线上服务的时候是不存在的，因为未来的事情还未发生，我们不可能知道。但在离线训练的时候，我们就容易犯这样的错误。比如说，我们利用 t 时刻的样本进行训练，但是使用了全量的样本生成特征，这些特征就包含了 t+1 时刻的未来信息，这就是一个典型的引入未来信息的错误例子。</p>
+<p>在做 rating 平均这个操作的时候，我们不要对这个 userId 下面的所有评分取平均值，而是要创建一个滑动窗口，先把这个用户下面的评分按照时间排序，再让这个滑动窗口一一滑动，滑动窗口的位置始终在当前 rating 前一个 rating 的位置。这样，我们再对滑动窗口内的分数做平均，就不会引入未来信息了</p>
+<h2 id="特征数据存入线上供模型服务用"><a href="#特征数据存入线上供模型服务用" class="headerlink" title="特征数据存入线上供模型服务用"></a>特征数据存入线上供模型服务用</h2><figure class="highlight bash"><figcaption><span>特征数据存储到 redis</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">val userKey = userFeaturePrefix + sample.getAs[String](<span class="string">&quot;userId&quot;</span>)</span><br><span class="line">val valueMap = mutable.Map[String, String]()</span><br><span class="line">valueMap(<span class="string">&quot;userRatedMovie1&quot;</span>) = sample.getAs[String](<span class="string">&quot;userRatedMovie1&quot;</span>)</span><br><span class="line">valueMap(<span class="string">&quot;userRatedMovie2&quot;</span>) = sample.getAs[String](<span class="string">&quot;userRatedMovie2&quot;</span>)</span><br><span class="line">...</span><br><span class="line">valueMap(<span class="string">&quot;userAvgRating&quot;</span>) = sample.getAs[String](<span class="string">&quot;userAvgRating&quot;</span>)</span><br><span class="line">valueMap(<span class="string">&quot;userRatingStddev&quot;</span>) = sample.getAs[String](<span class="string">&quot;userRatingStddev&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">redisClient.hset(userKey, JavaConversions.mapAsJavaMap(valueMap))</span><br></pre></td></tr></table></figure>
+<p>在样本处理过程中，我们选用评分和基于评分生成的好评差评标识作为样本标签，并基于 ratings 表的每条数据，通过联合物品和用户数据生成训练样本。在训练样本的生成中，要特别注意“未来信息”的问题，利用 Spark 中的 window 函数滑动生成历史行为相关特征。最后我们利用 Redis 的 hset 操作把线上推断用的特征存储 Redis。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1184,125 +1275,6 @@ Embedding 可以是实时特征嘛？如何实时读取 Embedding 特征？向�
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2023/08/16/ElasticSearch%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E5%8F%AC%E5%9B%9E%E7%BB%84%E4%BB%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Sure Zheng">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sure's BLOG">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/16/ElasticSearch%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E5%8F%AC%E5%9B%9E%E7%BB%84%E4%BB%B6/" class="post-title-link" itemprop="url">ElasticSearch 数据库与召回组件</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2023-08-16 21:51:55 / Modified: 23:22:37" itemprop="dateCreated datePublished" datetime="2023-08-16T21:51:55+08:00">2023-08-16</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/OLAP/" itemprop="url" rel="index"><span itemprop="name">OLAP</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>3.3k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>6 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="推荐系统召回层"><a href="#推荐系统召回层" class="headerlink" title="推荐系统召回层"></a>推荐系统召回层</h1><p>推荐系统的线上服务模块，proxy -&gt; 候选集 -&gt; 召回层 -&gt; 粗排 -&gt; 精排</p>
-<h2 id="召回方法"><a href="#召回方法" class="headerlink" title="召回方法"></a>召回方法</h2><ul>
-<li>单策略召回</li>
-</ul>
-<p>通过制定一条规则或者利用一个简单模型（简单直观）</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">//详见SimilarMovieFlow class</span><br><span class="line">public static List&lt;Movie&gt; candidateGenerator(Movie movie)&#123;</span><br><span class="line">    ArrayList&lt;Movie&gt; candidates = new ArrayList&lt;&gt;();</span><br><span class="line">    //使用HashMap去重</span><br><span class="line">    HashMap&lt;Integer, Movie&gt; candidateMap = new HashMap&lt;&gt;();</span><br><span class="line">    //电影movie包含多个风格标签</span><br><span class="line">    <span class="keyword">for</span> (String genre : movie.getGenres())&#123;</span><br><span class="line">        //召回策略的实现</span><br><span class="line">        List&lt;Movie&gt; oneCandidates = DataManager.getInstance().getMoviesByGenre(genre, 100, <span class="string">&quot;rating&quot;</span>); </span><br><span class="line">        <span class="keyword">for</span> (Movie candidate : oneCandidates)&#123;</span><br><span class="line">            candidateMap.put(candidate.getMovieId(), candidate);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    //去掉movie本身</span><br><span class="line">    <span class="keyword">if</span> (candidateMap.containsKey(movie.getMovieId()))&#123;</span><br><span class="line">        candidateMap.remove(movie.getMovieId());</span><br><span class="line">    &#125;</span><br><span class="line">    //最终的候选集</span><br><span class="line">    <span class="built_in">return</span> new ArrayList&lt;&gt;(candidateMap.values());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>多路召回策略<br>计算速度和召回率之间进行权衡的结果</li>
-</ul>
-<p>风格类型、高分评价、最新上映，这三路召回策略组成的多路召回方法<br>（其他方法：多线程并行；建立标签、特征索引；建立常用召回集缓存；）</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">public static List&lt;Movie&gt; multipleRetrievalCandidates(List&lt;Movie&gt; userHistory)&#123;</span><br><span class="line">    HashSet&lt;String&gt; genres = new HashSet&lt;&gt;();</span><br><span class="line">    //根据用户看过的电影，统计用户喜欢的电影风格</span><br><span class="line">    <span class="keyword">for</span> (Movie movie : userHistory)&#123;</span><br><span class="line">        genres.addAll(movie.getGenres());</span><br><span class="line">    &#125;</span><br><span class="line">    //根据用户喜欢的风格召回电影候选集</span><br><span class="line">    HashMap&lt;Integer, Movie&gt; candidateMap = new HashMap&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (String genre : genres)&#123;</span><br><span class="line">        List&lt;Movie&gt; oneCandidates = DataManager.getInstance().getMoviesByGenre(genre, 20, <span class="string">&quot;rating&quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (Movie candidate : oneCandidates)&#123;</span><br><span class="line">            candidateMap.put(candidate.getMovieId(), candidate);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    //召回所有电影中排名最高的100部电影</span><br><span class="line">    List&lt;Movie&gt; highRatingCandidates = DataManager.getInstance().getMovies(100, <span class="string">&quot;rating&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> (Movie candidate : highRatingCandidates)&#123;</span><br><span class="line">        candidateMap.put(candidate.getMovieId(), candidate);</span><br><span class="line">    &#125;</span><br><span class="line">    //召回最新上映的100部电影</span><br><span class="line">    List&lt;Movie&gt; latestCandidates = DataManager.getInstance().getMovies(100, <span class="string">&quot;releaseYear&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> (Movie candidate : latestCandidates)&#123;</span><br><span class="line">        candidateMap.put(candidate.getMovieId(), candidate);</span><br><span class="line">    &#125;</span><br><span class="line">    //去除用户已经观看过的电影</span><br><span class="line">    <span class="keyword">for</span> (Movie movie : userHistory)&#123;</span><br><span class="line">        candidateMap.remove(movie.getMovieId());</span><br><span class="line">    &#125;</span><br><span class="line">    //形成最终的候选集</span><br><span class="line">    <span class="built_in">return</span> new ArrayList&lt;&gt;(candidateMap.values());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="ElasticSearch-数据库"><a href="#ElasticSearch-数据库" class="headerlink" title="ElasticSearch 数据库"></a>ElasticSearch 数据库</h1><p>【非关系型数据库】搜索引擎数据库，内核基于 Lucene 构建，适用 Json 来承载数据，提供 RESTful API</p>
-<h2 id="存储结构"><a href="#存储结构" class="headerlink" title="存储结构"></a>存储结构</h2><ul>
-<li>Node（节点）</li>
-<li>Cluster（集群），一个或多个node</li>
-<li>Index（索引），类似于数据库概念</li>
-<li>Type（类型），类似于表概念</li>
-<li>Document（文档），可被索引的基础信息单元，数据某一行</li>
-<li>Field（列），数据某一列</li>
-<li>shard（分片），创建一个索引可以指定分成多少个分片</li>
-<li>Replication（备份），一个分片可以有多个备份（副本）</li>
-</ul>
-<h2 id="技术痛点"><a href="#技术痛点" class="headerlink" title="技术痛点"></a>技术痛点</h2><p>倒排序核心算法<br>ES 支持滚动索引（日期/序号/日期+序号），支持写入时清理策略</p>
-<h2 id="查询-DSL"><a href="#查询-DSL" class="headerlink" title="查询 DSL"></a>查询 DSL</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET /ad/phone/_search</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;query&quot;</span>:&#123;</span><br><span class="line">        <span class="string">&quot;match&quot;</span>:&#123;</span><br><span class="line">            <span class="string">&quot;name&quot;</span>:<span class="string">&quot;phone&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><figcaption><span>查询所有</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">GET /ad/phone/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;query&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;match_all&quot;</span>: &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><figcaption><span>复合查询</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">GET /ad/phone/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;query&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;bool&quot;</span>: &#123;</span><br><span class="line">      <span class="string">&quot;must&quot;</span>: [</span><br><span class="line">        &#123;<span class="string">&quot;match&quot;</span>: &#123;</span><br><span class="line">          <span class="string">&quot;name&quot;</span>: <span class="string">&quot;phone&quot;</span></span><br><span class="line">        &#125;&#125;</span><br><span class="line">      ]</span><br><span class="line">      , <span class="string">&quot;must_not&quot;</span>: [</span><br><span class="line">        &#123;<span class="string">&quot;match&quot;</span>: &#123;</span><br><span class="line">          <span class="string">&quot;color&quot;</span>: <span class="string">&quot;red&quot;</span></span><br><span class="line">        &#125;&#125;</span><br><span class="line">      ]</span><br><span class="line">      , <span class="string">&quot;should&quot;</span>: [</span><br><span class="line">        &#123;<span class="string">&quot;match&quot;</span>: &#123;</span><br><span class="line">          <span class="string">&quot;price&quot;</span>: 5000</span><br><span class="line">        &#125;&#125;</span><br><span class="line">      ]</span><br><span class="line">      , <span class="string">&quot;filter&quot;</span>: &#123;</span><br><span class="line">          <span class="string">&quot;term&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;label&quot;</span>: <span class="string">&quot;phone&quot;</span></span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="ES-数据库做召回引擎"><a href="#ES-数据库做召回引擎" class="headerlink" title="ES 数据库做召回引擎"></a>ES 数据库做召回引擎</h2><p>电商实体识别，全称命名实体识别（Named Entity Recognition，简称NER），指对查询词中的具有特定意义的语义实体进行识别。查询分析根据识别的结果，依据实体类型的权重对查询词进行改写，使得召回的文档符合查询的意图。</p>
-<h2 id="ES-数据库做质量监控"><a href="#ES-数据库做质量监控" class="headerlink" title="ES 数据库做质量监控"></a>ES 数据库做质量监控</h2><p>日志管理与分析（日志采集、存储、查询设计）、安全指标监控（Elastic Stack产品生态）、应用性能监控、Web抓取舆情分析</p>
-<h2 id="ES-数据库与机器学习"><a href="#ES-数据库与机器学习" class="headerlink" title="ES 数据库与机器学习"></a>ES 数据库与机器学习</h2><p>异常检测类型，无监督学习<br>数据帧分析，分类与回归</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1372,7 +1344,7 @@ Embedding 可以是实时特征嘛？如何实时读取 Embedding 特征？向�
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

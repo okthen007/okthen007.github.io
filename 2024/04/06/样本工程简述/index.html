@@ -20,21 +20,21 @@
     var CONFIG = {"hostname":"shuo-shuo.site","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="大数据的现状近年来，湖仓一体架构在大数据领域很受青睐，顾名思义，湖仓一体式将数据湖和数据仓库集成起来的架构，以数据湖为中心，周边集成了云上数据服务，包括数据仓库、机器学习、大数据处理、关系型数据库、非关系型数据库、搜索服务等。其中入湖入仓，湖仓打通、数据出湖、数据处理和数据消费，将各种云上数据服务集成到一起。 数据湖简介数据湖中数据包括 结构化数据（关系型数据库）；半结构化数据（CSV、Json、">
+  <meta name="description" content="训练样本深度模型通常在 TensorFlow 中训练，样本处理通常 Pyspark、Spark、Flink 等技术处理数据，但是训练样本链路也可以通过 TensorFlow 中的 OP 算子直接进行数据处理，从而保证离在线一致性。 特征特征包括 “物品特征”、“用户特征（用户历史行为特征）”、“场景特征” 生成样本时避免引入未来信息如果我们在 t 时刻进行模型预测，那么 t+1 时刻的信息就是未来">
 <meta property="og:type" content="article">
-<meta property="og:title" content="初识数据湖">
-<meta property="og:url" content="http://shuo-shuo.site/2023/09/10/%E5%88%9D%E8%AF%86%E6%95%B0%E6%8D%AE%E6%B9%96/index.html">
+<meta property="og:title" content="样本工程简述">
+<meta property="og:url" content="http://shuo-shuo.site/2024/04/06/%E6%A0%B7%E6%9C%AC%E5%B7%A5%E7%A8%8B%E7%AE%80%E8%BF%B0/index.html">
 <meta property="og:site_name" content="Sure&#39;s BLOG">
-<meta property="og:description" content="大数据的现状近年来，湖仓一体架构在大数据领域很受青睐，顾名思义，湖仓一体式将数据湖和数据仓库集成起来的架构，以数据湖为中心，周边集成了云上数据服务，包括数据仓库、机器学习、大数据处理、关系型数据库、非关系型数据库、搜索服务等。其中入湖入仓，湖仓打通、数据出湖、数据处理和数据消费，将各种云上数据服务集成到一起。 数据湖简介数据湖中数据包括 结构化数据（关系型数据库）；半结构化数据（CSV、Json、">
+<meta property="og:description" content="训练样本深度模型通常在 TensorFlow 中训练，样本处理通常 Pyspark、Spark、Flink 等技术处理数据，但是训练样本链路也可以通过 TensorFlow 中的 OP 算子直接进行数据处理，从而保证离在线一致性。 特征特征包括 “物品特征”、“用户特征（用户历史行为特征）”、“场景特征” 生成样本时避免引入未来信息如果我们在 t 时刻进行模型预测，那么 t+1 时刻的信息就是未来">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2023-09-10T14:46:50.000Z">
-<meta property="article:modified_time" content="2023-09-11T15:19:21.512Z">
+<meta property="article:published_time" content="2024-04-06T13:48:09.000Z">
+<meta property="article:modified_time" content="2024-04-06T14:01:52.088Z">
 <meta property="article:author" content="Sure Zheng">
 <meta property="article:tag" content="技术学习">
-<meta property="article:tag" content="存储方式">
+<meta property="article:tag" content="数据加工">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://shuo-shuo.site/2023/09/10/%E5%88%9D%E8%AF%86%E6%95%B0%E6%8D%AE%E6%B9%96/">
+<link rel="canonical" href="http://shuo-shuo.site/2024/04/06/%E6%A0%B7%E6%9C%AC%E5%B7%A5%E7%A8%8B%E7%AE%80%E8%BF%B0/">
 
 
 <script id="page-configurations">
@@ -47,7 +47,7 @@
   };
 </script>
 
-  <title>初识数据湖 | Sure's BLOG</title>
+  <title>样本工程简述 | Sure's BLOG</title>
   
 
 
@@ -172,7 +172,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2023/09/10/%E5%88%9D%E8%AF%86%E6%95%B0%E6%8D%AE%E6%B9%96/">
+    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2024/04/06/%E6%A0%B7%E6%9C%AC%E5%B7%A5%E7%A8%8B%E7%AE%80%E8%BF%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -185,7 +185,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          初识数据湖
+          样本工程简述
         </h1>
 
         <div class="post-meta">
@@ -194,23 +194,21 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2023-09-10 22:46:50" itemprop="dateCreated datePublished" datetime="2023-09-10T22:46:50+08:00">2023-09-10</time>
+              <time title="Created: 2024-04-06 21:48:09 / Modified: 22:01:52" itemprop="dateCreated datePublished" datetime="2024-04-06T21:48:09+08:00">2024-04-06</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-09-11 23:19:21" itemprop="dateModified" datetime="2023-09-11T23:19:21+08:00">2023-09-11</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
+                  <a href="/Categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Categories/%E7%AE%97%E6%B3%95/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
                 </span>
             </span>
 
@@ -220,14 +218,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>733</span>
+              <span>1.2k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
+              <span>2 mins.</span>
             </span>
 
         </div>
@@ -239,31 +237,12 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="大数据的现状"><a href="#大数据的现状" class="headerlink" title="大数据的现状"></a>大数据的现状</h1><p>近年来，湖仓一体架构在大数据领域很受青睐，顾名思义，湖仓一体式将数据湖和数据仓库集成起来的架构，以数据湖为中心，周边集成了云上数据服务，包括数据仓库、机器学习、大数据处理、关系型数据库、非关系型数据库、搜索服务等。其中入湖入仓，湖仓打通、数据出湖、数据处理和数据消费，将各种云上数据服务集成到一起。</p>
-<h1 id="数据湖简介"><a href="#数据湖简介" class="headerlink" title="数据湖简介"></a>数据湖简介</h1><p>数据湖中数据包括 结构化数据（关系型数据库）；半结构化数据（CSV、Json、XML等）；非结构化数据/二进制数据（图片、视频）；</p>
-<h2 id="数据湖的特性："><a href="#数据湖的特性：" class="headerlink" title="数据湖的特性："></a>数据湖的特性：</h2><ul>
-<li>MOR（merge on read）：写入在分析时，类似 github 的 push</li>
-<li>Update，只更新单列</li>
-<li>更快查询结果、较低存储成本</li>
-<li>可用于算法领域，机器学习、预测分析等</li>
-</ul>
-<h2 id="技术视角分析数据湖："><a href="#技术视角分析数据湖：" class="headerlink" title="技术视角分析数据湖："></a>技术视角分析数据湖：</h2><p>数据湖具备数据管理、数据溯源、流批一体的数据入湖架构，通常数据湖都会支持SQL和可编程的 Flink/Spark 数据处理能力，通常支持有向无环图的工作流模式。<br>最好可以提供一个标准的访问接口，类似于 JDBC 接口可以直接访问数据；</p>
-<ul>
-<li>风控、推荐、预警（搜索下拉场景，来一条数据处理一条）</li>
-<li>日活、留存、转化（CTR场景下，数据探索类应用）</li>
-<li>图片、视频存储（多模态场景下，存储多模态数据）</li>
-</ul>
-<h2 id="阿里云案例-开源生态构建数据湖"><a href="#阿里云案例-开源生态构建数据湖" class="headerlink" title="阿里云案例 - 开源生态构建数据湖"></a>阿里云案例 - 开源生态构建数据湖</h2><ul>
-<li>提供数据湖元数据管理、数据湖加速等服务</li>
-<li>客户价值1： 通过分层存储，引入多存储类型解决客户温/冷数据长期存储成本优化，让用户资源扩容更加灵活</li>
-<li>客户价值2: 计算与存储弹性扩展能力降低管理运维难度，存储与计算的解耦合，让升级更具灵活性</li>
-</ul>
-<h3 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h3><ul>
-<li><p>典型的数据湖架构：<br>分布式对象存储+多模态计算引擎+数据管理</p>
-</li>
-<li><p>典型大数据仓库存储架构：<br>FDM（原始数据） + GDM（整合和拉宽数据） + ADM（轻量汇总数据） + APP（业务定制数据） + DEV层（临时数据）</p>
-</li>
-</ul>
+        <h2 id="训练样本"><a href="#训练样本" class="headerlink" title="训练样本"></a>训练样本</h2><p>深度模型通常在 TensorFlow 中训练，样本处理通常 Pyspark、Spark、Flink 等技术处理数据，但是训练样本链路也可以通过 TensorFlow 中的 OP 算子直接进行数据处理，从而保证离在线一致性。</p>
+<h3 id="特征"><a href="#特征" class="headerlink" title="特征"></a>特征</h3><p>特征包括 “物品特征”、“用户特征（用户历史行为特征）”、“场景特征”</p>
+<h2 id="生成样本时避免引入未来信息"><a href="#生成样本时避免引入未来信息" class="headerlink" title="生成样本时避免引入未来信息"></a>生成样本时避免引入未来信息</h2><p>如果我们在 t 时刻进行模型预测，那么 t+1 时刻的信息就是未来信息。这个问题在模型线上服务的时候是不存在的，因为未来的事情还未发生，我们不可能知道。但在离线训练的时候，我们就容易犯这样的错误。比如说，我们利用 t 时刻的样本进行训练，但是使用了全量的样本生成特征，这些特征就包含了 t+1 时刻的未来信息，这就是一个典型的引入未来信息的错误例子。</p>
+<p>在做 rating 平均这个操作的时候，我们不要对这个 userId 下面的所有评分取平均值，而是要创建一个滑动窗口，先把这个用户下面的评分按照时间排序，再让这个滑动窗口一一滑动，滑动窗口的位置始终在当前 rating 前一个 rating 的位置。这样，我们再对滑动窗口内的分数做平均，就不会引入未来信息了</p>
+<h2 id="特征数据存入线上供模型服务用"><a href="#特征数据存入线上供模型服务用" class="headerlink" title="特征数据存入线上供模型服务用"></a>特征数据存入线上供模型服务用</h2><figure class="highlight bash"><figcaption><span>特征数据存储到 redis</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">val userKey = userFeaturePrefix + sample.getAs[String](<span class="string">&quot;userId&quot;</span>)</span><br><span class="line">val valueMap = mutable.Map[String, String]()</span><br><span class="line">valueMap(<span class="string">&quot;userRatedMovie1&quot;</span>) = sample.getAs[String](<span class="string">&quot;userRatedMovie1&quot;</span>)</span><br><span class="line">valueMap(<span class="string">&quot;userRatedMovie2&quot;</span>) = sample.getAs[String](<span class="string">&quot;userRatedMovie2&quot;</span>)</span><br><span class="line">...</span><br><span class="line">valueMap(<span class="string">&quot;userAvgRating&quot;</span>) = sample.getAs[String](<span class="string">&quot;userAvgRating&quot;</span>)</span><br><span class="line">valueMap(<span class="string">&quot;userRatingStddev&quot;</span>) = sample.getAs[String](<span class="string">&quot;userRatingStddev&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">redisClient.hset(userKey, JavaConversions.mapAsJavaMap(valueMap))</span><br></pre></td></tr></table></figure>
+<p>在样本处理过程中，我们选用评分和基于评分生成的好评差评标识作为样本标签，并基于 ratings 表的每条数据，通过联合物品和用户数据生成训练样本。在训练样本的生成中，要特别注意“未来信息”的问题，利用 Spark 中的 window 函数滑动生成历史行为相关特征。最后我们利用 Redis 的 hset 操作把线上推断用的特征存储 Redis。</p>
 
     </div>
 
@@ -294,7 +273,7 @@
           
           <div class="post-tags">
               <a href="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 技术学习</a>
-              <a href="/tags/%E5%AD%98%E5%82%A8%E6%96%B9%E5%BC%8F/" rel="tag"><i class="fa fa-tag"></i> 存储方式</a>
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%8A%A0%E5%B7%A5/" rel="tag"><i class="fa fa-tag"></i> 数据加工</a>
           </div>
 
         
@@ -303,13 +282,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/08/31/pb%E3%80%81parquet%E5%92%8CTFRecord%E6%A0%BC%E5%BC%8F%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AF%B9%E6%AF%94/" rel="prev" title="pb和parquet及TFRecord格式介绍与对比">
-      <i class="fa fa-chevron-left"></i> pb和parquet及TFRecord格式介绍与对比
+    <a href="/2024/03/31/%E6%B5%85%E8%B0%88%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86-dataservice/" rel="prev" title="浅谈分布式数据预处理-dataservice">
+      <i class="fa fa-chevron-left"></i> 浅谈分布式数据预处理-dataservice
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2023/09/18/%E6%B5%81%E5%A4%84%E7%90%86%E6%89%B9%E5%A4%84%E7%90%86%E5%92%8CKappa%E6%9E%B6%E6%9E%84/" rel="next" title="流处理批处理和Kappa架构">
-      流处理批处理和Kappa架构 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -368,7 +344,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%9A%84%E7%8E%B0%E7%8A%B6"><span class="nav-number">1.</span> <span class="nav-text">大数据的现状</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%B9%96%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">数据湖简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%B9%96%E7%9A%84%E7%89%B9%E6%80%A7%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">数据湖的特性：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E8%A7%86%E8%A7%92%E5%88%86%E6%9E%90%E6%95%B0%E6%8D%AE%E6%B9%96%EF%BC%9A"><span class="nav-number">2.2.</span> <span class="nav-text">技术视角分析数据湖：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BF%E9%87%8C%E4%BA%91%E6%A1%88%E4%BE%8B-%E5%BC%80%E6%BA%90%E7%94%9F%E6%80%81%E6%9E%84%E5%BB%BA%E6%95%B0%E6%8D%AE%E6%B9%96"><span class="nav-number">2.3.</span> <span class="nav-text">阿里云案例 - 开源生态构建数据湖</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%99%84%E5%BD%95"><span class="nav-number">2.3.1.</span> <span class="nav-text">附录</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E6%A0%B7%E6%9C%AC"><span class="nav-number">1.</span> <span class="nav-text">训练样本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E5%BE%81"><span class="nav-number">1.1.</span> <span class="nav-text">特征</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E6%A0%B7%E6%9C%AC%E6%97%B6%E9%81%BF%E5%85%8D%E5%BC%95%E5%85%A5%E6%9C%AA%E6%9D%A5%E4%BF%A1%E6%81%AF"><span class="nav-number">2.</span> <span class="nav-text">生成样本时避免引入未来信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E6%95%B0%E6%8D%AE%E5%AD%98%E5%85%A5%E7%BA%BF%E4%B8%8A%E4%BE%9B%E6%A8%A1%E5%9E%8B%E6%9C%8D%E5%8A%A1%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">特征数据存入线上供模型服务用</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
