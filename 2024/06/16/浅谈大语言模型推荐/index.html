@@ -20,21 +20,22 @@
     var CONFIG = {"hostname":"shuo-shuo.site","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Flink引擎与KafkaFlink是流处理框架，Kafka消息队列是最广泛使用的消息队列（JDQ、JMQ），Flink引擎通常用来处理 Kafka消息队列中的消息（Topic）； Flink 介绍 Flink 提供两种类型类型 API：DataStream API; Table API;（数据流中同样提供两种API形式做数据处理，并提供可以进行转换的算子进行不同API间算子的串联） Datast">
+  <meta name="description" content="背景DLRM to GR works？推荐系统是 近十年来兴起的话题，大模型近两年快速兴趣，如何将大模型应用于推荐系统领域，通过LLM生成式推荐的思路。通过 Meta 工业界首个万亿级别参数的生成式推荐模型，分析下 “生成式推荐” 是否可行。https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;2402.17152 模型结构输入是用户交互过的历史item序列，只考虑稀疏特征，放弃连续特征；新设计encode">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Flink 引擎与实时推荐">
-<meta property="og:url" content="http://shuo-shuo.site/2023/08/02/flink%E5%BC%95%E6%93%8E%E4%B8%8E%E5%AE%9E%E6%97%B6%E6%8E%A8%E8%8D%90/index.html">
+<meta property="og:title" content="浅谈大语言模型推荐">
+<meta property="og:url" content="http://shuo-shuo.site/2024/06/16/%E6%B5%85%E8%B0%88%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E6%8E%A8%E8%8D%90/index.html">
 <meta property="og:site_name" content="Sure&#39;s BLOG">
-<meta property="og:description" content="Flink引擎与KafkaFlink是流处理框架，Kafka消息队列是最广泛使用的消息队列（JDQ、JMQ），Flink引擎通常用来处理 Kafka消息队列中的消息（Topic）； Flink 介绍 Flink 提供两种类型类型 API：DataStream API; Table API;（数据流中同样提供两种API形式做数据处理，并提供可以进行转换的算子进行不同API间算子的串联） Datast">
+<meta property="og:description" content="背景DLRM to GR works？推荐系统是 近十年来兴起的话题，大模型近两年快速兴趣，如何将大模型应用于推荐系统领域，通过LLM生成式推荐的思路。通过 Meta 工业界首个万亿级别参数的生成式推荐模型，分析下 “生成式推荐” 是否可行。https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;2402.17152 模型结构输入是用户交互过的历史item序列，只考虑稀疏特征，放弃连续特征；新设计encode">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2023-08-02T14:29:53.000Z">
-<meta property="article:modified_time" content="2023-08-04T15:07:37.986Z">
+<meta property="og:image" content="http://shuo-shuo.site/2024/06/16/Pics/GR.png">
+<meta property="article:published_time" content="2024-06-16T13:33:16.000Z">
+<meta property="article:modified_time" content="2024-06-16T14:02:48.461Z">
 <meta property="article:author" content="Sure Zheng">
-<meta property="article:tag" content="计算引擎">
 <meta property="article:tag" content="技术学习">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://shuo-shuo.site/2024/06/16/Pics/GR.png">
 
-<link rel="canonical" href="http://shuo-shuo.site/2023/08/02/flink%E5%BC%95%E6%93%8E%E4%B8%8E%E5%AE%9E%E6%97%B6%E6%8E%A8%E8%8D%90/">
+<link rel="canonical" href="http://shuo-shuo.site/2024/06/16/%E6%B5%85%E8%B0%88%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E6%8E%A8%E8%8D%90/">
 
 
 <script id="page-configurations">
@@ -47,7 +48,7 @@
   };
 </script>
 
-  <title>Flink 引擎与实时推荐 | Sure's BLOG</title>
+  <title>浅谈大语言模型推荐 | Sure's BLOG</title>
   
 
 
@@ -172,7 +173,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2023/08/02/flink%E5%BC%95%E6%93%8E%E4%B8%8E%E5%AE%9E%E6%97%B6%E6%8E%A8%E8%8D%90/">
+    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2024/06/16/%E6%B5%85%E8%B0%88%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E6%8E%A8%E8%8D%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -185,7 +186,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Flink 引擎与实时推荐
+          浅谈大语言模型推荐
         </h1>
 
         <div class="post-meta">
@@ -194,16 +195,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2023-08-02 22:29:53" itemprop="dateCreated datePublished" datetime="2023-08-02T22:29:53+08:00">2023-08-02</time>
+              <time title="Created: 2024-06-16 21:33:16 / Modified: 22:02:48" itemprop="dateCreated datePublished" datetime="2024-06-16T21:33:16+08:00">2024-06-16</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-08-04 23:07:37" itemprop="dateModified" datetime="2023-08-04T23:07:37+08:00">2023-08-04</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -211,10 +206,6 @@
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/Categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Categories/%E7%AE%97%E6%B3%95/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
                 </span>
             </span>
 
@@ -224,14 +215,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.5k</span>
+              <span>956</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>3 mins.</span>
+              <span>2 mins.</span>
             </span>
 
         </div>
@@ -243,48 +234,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="Flink引擎与Kafka"><a href="#Flink引擎与Kafka" class="headerlink" title="Flink引擎与Kafka"></a>Flink引擎与Kafka</h1><p>Flink是流处理框架，Kafka消息队列是最广泛使用的消息队列（JDQ、JMQ），Flink引擎通常用来处理 Kafka消息队列中的消息（Topic）；</p>
-<h2 id="Flink-介绍"><a href="#Flink-介绍" class="headerlink" title="Flink 介绍"></a>Flink 介绍</h2><ul>
-<li>Flink 提供两种类型类型 API：<strong>DataStream API</strong>; <strong>Table API</strong>;（数据流中同样提供两种API形式做数据处理，并提供可以进行转换的算子进行不同API间算子的串联）</li>
-<li>Datastream API 和 Table API 不相互依赖，可以混合使用</li>
-<li>支持流处理和批处理</li>
-<li>共享槽位组，可以实现资源隔离（Java 线程上隔离）</li>
-<li>支持并行度设置，客户端执行预处理并转换为并行数据流形式，由TM和JM来执行</li>
-</ul>
-<h2 id="重要特性"><a href="#重要特性" class="headerlink" title="重要特性"></a>重要特性</h2><h3 id="支持窗口类型"><a href="#支持窗口类型" class="headerlink" title="支持窗口类型"></a>支持窗口类型</h3><ul>
-<li>滑动窗口，移动窗口，移动window slile, window_slide &lt; window_size</li>
-<li>滚动窗口，window_slide = 0时的窗口</li>
-<li>会话窗口和全局窗口用的不多<br>Flink 按照时间窗口（window）来处理流数据，把缓存在内存中数据进行批处理。通过连接曝光数据和点击数据，计算 CTR。<h3 id="问题？分割两个窗口怎么办？"><a href="#问题？分割两个窗口怎么办？" class="headerlink" title="问题？分割两个窗口怎么办？"></a>问题？分割两个窗口怎么办？</h3>滑动窗口提供给两窗口时间间隔足够时间做 Join，避免数据遗漏</li>
-</ul>
-<h3 id="支持有状态流"><a href="#支持有状态流" class="headerlink" title="支持有状态流"></a>支持有状态流</h3><ul>
-<li>容错机制完善，提供checkpoint和statebackends（状态存储）功能</li>
-<li>提供 memory、filesystem、rocksDB三种类型的状态存储机制</li>
-</ul>
-<h2 id="Kafka-介绍"><a href="#Kafka-介绍" class="headerlink" title="Kafka 介绍"></a>Kafka 介绍</h2><ul>
-<li><strong>分布式的</strong>、<strong>多副本</strong>，基于 Zookeeper 的分布式消息流平台</li>
-<li>多用于提交日志从而做全链路分析、流量跟踪（点击流）从而做推荐、实时监控</li>
-<li>支持消息压缩，支持LZ4、snappy等格式</li>
-</ul>
-<h3 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h3><ul>
-<li>高吞吐，10几万条消息/s</li>
-<li>高伸缩，每个主题包含多个 partition</li>
-<li>容错性，集群中某个节点失败，Kafka集群可以正常工作</li>
-<li>支持设置检查点，可以从停止时的检查点重新启动</li>
-<li>支持重置位点功能，可以从指定位点进行消费</li>
-<li>提供多消费者、生产者、broker（独立Kafka服务器，域名+端口号）</li>
-</ul>
-<h2 id="Flink批流一体Kappa架构浅谈"><a href="#Flink批流一体Kappa架构浅谈" class="headerlink" title="Flink批流一体Kappa架构浅谈"></a>Flink批流一体Kappa架构浅谈</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
-<li>无存储系统，运行速度快</li>
-<li>增加数据重播功能，数据落盘后进行落盘数据处理，保证代码维护一致性</li>
-</ul>
-<h3 id="难点"><a href="#难点" class="headerlink" title="难点"></a>难点</h3><ul>
-<li>已构造数据体系</li>
-<li>批流一体难以共享一套代码，复杂特征（用户观看视频的百分比）</li>
-<li>数据时间跨度大、计算复杂，难以实现</li>
-</ul>
-<h2 id="实操"><a href="#实操" class="headerlink" title="实操"></a>实操</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">DataStream&lt;Rating&gt; ratingStream = inputStream.map(Rating::new);</span><br><span class="line">ratingStream.keyBy(rating -&gt; rating.userId)</span><br><span class="line">        .timeWindow(Time.seconds(1))</span><br><span class="line">        .reduce(</span><br><span class="line">                (ReduceFunction&lt;Rating&gt;) (rating, t1) -&gt; &#123;</span><br><span class="line">                    <span class="keyword">if</span> (rating.timestamp.compareTo(t1.timestamp) &gt; 0)&#123;</span><br><span class="line">                        <span class="built_in">return</span> rating;</span><br><span class="line">                    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                        <span class="built_in">return</span> t1;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">        ).addSink(new SinkFunction&lt;Rating&gt;() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void invoke(Rating value, Context context) &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;userId:&quot;</span> + value.userId + <span class="string">&quot;\tlatestMovieId:&quot;</span> + value.latestMovieId);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h1 id="Flink引擎搭建实时数仓"><a href="#Flink引擎搭建实时数仓" class="headerlink" title="Flink引擎搭建实时数仓"></a>Flink引擎搭建实时数仓</h1><p><a target="_blank" rel="noopener" href="https://tech.meituan.com/2021/08/26/data-warehouse-in-meituan-waimai.html">美团基于 Flink 的实时数仓建设实践</a></p>
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>DLRM to GR works？<br>推荐系统是 近十年来兴起的话题，大模型近两年快速兴趣，如何将大模型应用于推荐系统领域，通过LLM生成式推荐的思路。通过 Meta 工业界首个万亿级别参数的生成式推荐模型，分析下 “生成式推荐” 是否可行。<br><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2402.17152">https://arxiv.org/pdf/2402.17152</a></p>
+<h2 id="模型结构"><a href="#模型结构" class="headerlink" title="模型结构"></a>模型结构</h2><p>输入是用户交互过的历史item序列，只考虑稀疏特征，放弃连续特征；新设计encoder模型HSTU，相比DLRM模型，模型复杂度提升285倍；训练和推理都采用内存、计算优化的方案；</p>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><p>在召回、排序场景，线上指标召回+6.4%，排序+12.4%；</p>
+<h2 id="性能基线"><a href="#性能基线" class="headerlink" title="性能基线"></a>性能基线</h2><p>8192的序列长度上HSTU比FlashAttention2加速5.3x-15.2x，推理通过成本分摊M-FALCON方式在DLRM同等资源配置下吞吐提升1.5倍。</p>
+<p><img src="../Pics/GR.png" alt="模型架构图"></p>
+<h2 id="区别改造"><a href="#区别改造" class="headerlink" title="区别改造"></a>区别改造</h2><h3 id="输入数据构造"><a href="#输入数据构造" class="headerlink" title="输入数据构造"></a>输入数据构造</h3><p>将用户行为定义为“新模态”，无损信息直接输入类LLM模型。<br>Categorical（’sparse’）特征：进行序列化<br>选取最长的时间序列（通常是将用户交互的 item 合并）作为主要的时间序列。<br>其余的特征是随着时间缓慢变化的时间序列，例如用户关注的创作者等。通过保留每个连续片段最早的条目来压缩这些时间序列，并将结果合并到主序列中。<br>Numerical（’dense’）特征：直接丢弃<br>这类特征变化更为频繁，从计算和存储的角度将这些特征完全序列化是不可行的。<br>这些数值特征是由类别特征聚合而来，而这些类别特征我们已经编码入了模型。<br>通过这种设计，可以有效降低序列的长度。</p>
+<h3 id="召回任务"><a href="#召回任务" class="headerlink" title="召回任务"></a>召回任务</h3><p>训练：基于历史行为序列，随机mask掉一些item，预测这些item，计算loss；<br>推理：基于历史行为序列，需要一次预测一批item，基于模型输出embedding，映射到全量item库（会有采样策略）；</p>
+<h3 id="排序任务"><a href="#排序任务" class="headerlink" title="排序任务"></a>排序任务</h3><p>训练：基于历史行为序列，随机mask掉一些item的action，预测这些item的action，计算loss；<br>推理：基于历史行为序列，将待排序的item append到用户历史行为序列里，预测action位置的embeding，再外接NN模型适配多任务，输出具体结果；</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>scaling law在参数高达1.5万亿时还能scaling，而作为对比的DLRMs在参数达到2000亿的时候性能就开始下降；</p>
 
     </div>
 
@@ -314,7 +272,6 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E/" rel="tag"><i class="fa fa-tag"></i> 计算引擎</a>
               <a href="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 技术学习</a>
           </div>
 
@@ -324,13 +281,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/08/01/redis%E5%92%8C%E6%A8%A1%E5%9E%8B%E6%9C%8D%E5%8A%A1/" rel="prev" title="Redis 和模型服务">
-      <i class="fa fa-chevron-left"></i> Redis 和模型服务
+    <a href="/2024/04/06/%E6%A0%B7%E6%9C%AC%E5%B7%A5%E7%A8%8B%E7%AE%80%E8%BF%B0/" rel="prev" title="样本工程简述">
+      <i class="fa fa-chevron-left"></i> 样本工程简述
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2023/08/03/Spark%E5%BC%95%E6%93%8E%E4%B8%8E%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B/" rel="next" title="Spark 引擎与特征工程">
-      Spark 引擎与特征工程 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -389,7 +343,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Flink%E5%BC%95%E6%93%8E%E4%B8%8EKafka"><span class="nav-number">1.</span> <span class="nav-text">Flink引擎与Kafka</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Flink-%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.1.</span> <span class="nav-text">Flink 介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E8%A6%81%E7%89%B9%E6%80%A7"><span class="nav-number">1.2.</span> <span class="nav-text">重要特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%AF%E6%8C%81%E7%AA%97%E5%8F%A3%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.1.</span> <span class="nav-text">支持窗口类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%EF%BC%9F%E5%88%86%E5%89%B2%E4%B8%A4%E4%B8%AA%E7%AA%97%E5%8F%A3%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F"><span class="nav-number">1.2.2.</span> <span class="nav-text">问题？分割两个窗口怎么办？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%AF%E6%8C%81%E6%9C%89%E7%8A%B6%E6%80%81%E6%B5%81"><span class="nav-number">1.2.3.</span> <span class="nav-text">支持有状态流</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka-%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.3.</span> <span class="nav-text">Kafka 介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E6%80%A7"><span class="nav-number">1.3.1.</span> <span class="nav-text">特性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flink%E6%89%B9%E6%B5%81%E4%B8%80%E4%BD%93Kappa%E6%9E%B6%E6%9E%84%E6%B5%85%E8%B0%88"><span class="nav-number">1.4.</span> <span class="nav-text">Flink批流一体Kappa架构浅谈</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E7%82%B9"><span class="nav-number">1.4.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%BE%E7%82%B9"><span class="nav-number">1.4.2.</span> <span class="nav-text">难点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%93%8D"><span class="nav-number">1.5.</span> <span class="nav-text">实操</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Flink%E5%BC%95%E6%93%8E%E6%90%AD%E5%BB%BA%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93"><span class="nav-number">2.</span> <span class="nav-text">Flink引擎搭建实时数仓</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">模型结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.2.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E5%9F%BA%E7%BA%BF"><span class="nav-number">1.3.</span> <span class="nav-text">性能基线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB%E6%94%B9%E9%80%A0"><span class="nav-number">1.4.</span> <span class="nav-text">区别改造</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%95%B0%E6%8D%AE%E6%9E%84%E9%80%A0"><span class="nav-number">1.4.1.</span> <span class="nav-text">输入数据构造</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AC%E5%9B%9E%E4%BB%BB%E5%8A%A1"><span class="nav-number">1.4.2.</span> <span class="nav-text">召回任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%92%E5%BA%8F%E4%BB%BB%E5%8A%A1"><span class="nav-number">1.4.3.</span> <span class="nav-text">排序任务</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

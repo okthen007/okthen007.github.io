@@ -130,7 +130,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">19</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">20</span></a>
 
   </li>
         <li class="menu-item menu-item-schedule">
@@ -161,6 +161,96 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2024/06/16/%E6%B5%85%E8%B0%88%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E6%8E%A8%E8%8D%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sure Zheng">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sure's BLOG">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/06/16/%E6%B5%85%E8%B0%88%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E6%8E%A8%E8%8D%90/" class="post-title-link" itemprop="url">浅谈大语言模型推荐</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2024-06-16 21:33:16 / Modified: 22:02:48" itemprop="dateCreated datePublished" datetime="2024-06-16T21:33:16+08:00">2024-06-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>956</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>DLRM to GR works？<br>推荐系统是 近十年来兴起的话题，大模型近两年快速兴趣，如何将大模型应用于推荐系统领域，通过LLM生成式推荐的思路。通过 Meta 工业界首个万亿级别参数的生成式推荐模型，分析下 “生成式推荐” 是否可行。<br><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2402.17152">https://arxiv.org/pdf/2402.17152</a></p>
+<h2 id="模型结构"><a href="#模型结构" class="headerlink" title="模型结构"></a>模型结构</h2><p>输入是用户交互过的历史item序列，只考虑稀疏特征，放弃连续特征；新设计encoder模型HSTU，相比DLRM模型，模型复杂度提升285倍；训练和推理都采用内存、计算优化的方案；</p>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><p>在召回、排序场景，线上指标召回+6.4%，排序+12.4%；</p>
+<h2 id="性能基线"><a href="#性能基线" class="headerlink" title="性能基线"></a>性能基线</h2><p>8192的序列长度上HSTU比FlashAttention2加速5.3x-15.2x，推理通过成本分摊M-FALCON方式在DLRM同等资源配置下吞吐提升1.5倍。</p>
+<p><img src="../Pics/GR.png" alt="模型架构图"></p>
+<h2 id="区别改造"><a href="#区别改造" class="headerlink" title="区别改造"></a>区别改造</h2><h3 id="输入数据构造"><a href="#输入数据构造" class="headerlink" title="输入数据构造"></a>输入数据构造</h3><p>将用户行为定义为“新模态”，无损信息直接输入类LLM模型。<br>Categorical（’sparse’）特征：进行序列化<br>选取最长的时间序列（通常是将用户交互的 item 合并）作为主要的时间序列。<br>其余的特征是随着时间缓慢变化的时间序列，例如用户关注的创作者等。通过保留每个连续片段最早的条目来压缩这些时间序列，并将结果合并到主序列中。<br>Numerical（’dense’）特征：直接丢弃<br>这类特征变化更为频繁，从计算和存储的角度将这些特征完全序列化是不可行的。<br>这些数值特征是由类别特征聚合而来，而这些类别特征我们已经编码入了模型。<br>通过这种设计，可以有效降低序列的长度。</p>
+<h3 id="召回任务"><a href="#召回任务" class="headerlink" title="召回任务"></a>召回任务</h3><p>训练：基于历史行为序列，随机mask掉一些item，预测这些item，计算loss；<br>推理：基于历史行为序列，需要一次预测一批item，基于模型输出embedding，映射到全量item库（会有采样策略）；</p>
+<h3 id="排序任务"><a href="#排序任务" class="headerlink" title="排序任务"></a>排序任务</h3><p>训练：基于历史行为序列，随机mask掉一些item的action，预测这些item的action，计算loss；<br>推理：基于历史行为序列，将待排序的item append到用户历史行为序列里，预测action位置的embeding，再外接NN模型适配多任务，输出具体结果；</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>scaling law在参数高达1.5万亿时还能scaling，而作为对比的DLRMs在参数达到2000亿的时候性能就开始下降；</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1181,100 +1271,6 @@ Embedding 可以是实时特征嘛？如何实时读取 Embedding 特征？向�
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://shuo-shuo.site/2023/08/24/%E6%B5%85%E8%B0%88%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%92%8C%E5%BE%AE%E8%B0%83%E6%8A%80%E6%9C%AF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Sure Zheng">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sure's BLOG">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/24/%E6%B5%85%E8%B0%88%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%92%8C%E5%BE%AE%E8%B0%83%E6%8A%80%E6%9C%AF/" class="post-title-link" itemprop="url">浅谈大模型和微调技术</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2023-08-24 00:17:10 / Modified: 00:48:33" itemprop="dateCreated datePublished" datetime="2023-08-24T00:17:10+08:00">2023-08-24</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>694</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="大模型浅谈"><a href="#大模型浅谈" class="headerlink" title="大模型浅谈"></a>大模型浅谈</h1><p>自从chatgpt爆火以来，大模型不断涌现，从 Bert、GPT3、GPT4、Chat-glm，到 Lamma2（Meta AI） 再到 文心、千帆等国产大模型等，各公司都在探索大模型，在大模型中，预训练网络模型往往非常重要，因为模型参数量持续增加，模型预训练耗时很长，训练一个百亿级别的大模型并不简单。</p>
-<p>Langchain 架构的涌现使得 通过 Agent 能力动态调用 Chain 成为可能，不同 agent 提供不同解决方案，langchain+chatGLM+本地知识库，也可以提供快速的部署方式搭建本地知识库和AI问答系统。</p>
-<h1 id="大模型训练框架"><a href="#大模型训练框架" class="headerlink" title="大模型训练框架"></a>大模型训练框架</h1><p>Pytorch、Tensorflow 无法满足大规模模型训练的需求，因此 Pytorch 开发了 DeepSpeed；腾讯开发了 PatricStar；达摩院开发了 Whale；百度开发了 PaddlePaddle；</p>
-<h1 id="大模型微调落地"><a href="#大模型微调落地" class="headerlink" title="大模型微调落地"></a>大模型微调落地</h1><p>预训练大模型+微调方式 更适合长尾常见落地，AIGC 领域 也同样可以 通过 RLHF 等强化学习框架技术来进行微调，从而保证生成内容的有用性、真实性、无害性。</p>
-<h2 id="微调技术"><a href="#微调技术" class="headerlink" title="微调技术"></a>微调技术</h2><ul>
-<li>Lora 微调，降秩，(稠密矩阵 -&gt; 稀疏矩阵)</li>
-<li>Prefix Tuning，最上层的网络增加一个前缀</li>
-<li>P-tuning V2，每个网络层前面增加一个前缀，可以tracking每一个层的微调是否有问题</li>
-<li>Prompt Tuning（更新 Verbalizer 和 Label的对应关系）</li>
-<li>Delta Tuning，多种微调方式组合</li>
-<li>SFT（全参数微调），需要更高的 GPU</li>
-</ul>
-<p>在越大的数据集上，微调方法对于模型准确性来说，影响不大，lora tuning 等可以媲美全参数微调，但对于小模型来说，全参数微调是更好的选择。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1344,7 +1340,7 @@ Embedding 可以是实时特征嘛？如何实时读取 Embedding 特征？向�
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
