@@ -28,7 +28,7 @@
 <meta property="og:description" content="训练样本深度模型通常在 TensorFlow 中训练，样本处理通常 Pyspark、Spark、Flink 等技术处理数据，但是训练样本链路也可以通过 TensorFlow 中的 OP 算子直接进行数据处理，从而保证离在线一致性。 特征特征包括 “物品特征”、“用户特征（用户历史行为特征）”、“场景特征” 生成样本时避免引入未来信息如果我们在 t 时刻进行模型预测，那么 t+1 时刻的信息就是未来">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-04-06T13:48:09.000Z">
-<meta property="article:modified_time" content="2024-04-06T14:01:52.088Z">
+<meta property="article:modified_time" content="2024-06-16T14:03:29.080Z">
 <meta property="article:author" content="Sure Zheng">
 <meta property="article:tag" content="技术学习">
 <meta property="article:tag" content="数据加工">
@@ -194,10 +194,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2024-04-06 21:48:09 / Modified: 22:01:52" itemprop="dateCreated datePublished" datetime="2024-04-06T21:48:09+08:00">2024-04-06</time>
+              <time title="Created: 2024-04-06 21:48:09" itemprop="dateCreated datePublished" datetime="2024-04-06T21:48:09+08:00">2024-04-06</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-06-16 22:03:29" itemprop="dateModified" datetime="2024-06-16T22:03:29+08:00">2024-06-16</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -243,7 +249,7 @@
 <p>在做 rating 平均这个操作的时候，我们不要对这个 userId 下面的所有评分取平均值，而是要创建一个滑动窗口，先把这个用户下面的评分按照时间排序，再让这个滑动窗口一一滑动，滑动窗口的位置始终在当前 rating 前一个 rating 的位置。这样，我们再对滑动窗口内的分数做平均，就不会引入未来信息了</p>
 <h2 id="特征数据存入线上供模型服务用"><a href="#特征数据存入线上供模型服务用" class="headerlink" title="特征数据存入线上供模型服务用"></a>特征数据存入线上供模型服务用</h2><figure class="highlight bash"><figcaption><span>特征数据存储到 redis</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">val userKey = userFeaturePrefix + sample.getAs[String](<span class="string">&quot;userId&quot;</span>)</span><br><span class="line">val valueMap = mutable.Map[String, String]()</span><br><span class="line">valueMap(<span class="string">&quot;userRatedMovie1&quot;</span>) = sample.getAs[String](<span class="string">&quot;userRatedMovie1&quot;</span>)</span><br><span class="line">valueMap(<span class="string">&quot;userRatedMovie2&quot;</span>) = sample.getAs[String](<span class="string">&quot;userRatedMovie2&quot;</span>)</span><br><span class="line">...</span><br><span class="line">valueMap(<span class="string">&quot;userAvgRating&quot;</span>) = sample.getAs[String](<span class="string">&quot;userAvgRating&quot;</span>)</span><br><span class="line">valueMap(<span class="string">&quot;userRatingStddev&quot;</span>) = sample.getAs[String](<span class="string">&quot;userRatingStddev&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">redisClient.hset(userKey, JavaConversions.mapAsJavaMap(valueMap))</span><br></pre></td></tr></table></figure>
 <p>在样本处理过程中，我们选用评分和基于评分生成的好评差评标识作为样本标签，并基于 ratings 表的每条数据，通过联合物品和用户数据生成训练样本。在训练样本的生成中，要特别注意“未来信息”的问题，利用 Spark 中的 window 函数滑动生成历史行为相关特征。最后我们利用 Redis 的 hset 操作把线上推断用的特征存储 Redis。</p>
-
+<h2 id="Youtube-举例"><a href="#Youtube-举例" class="headerlink" title="Youtube 举例"></a>Youtube 举例</h2>
     </div>
 
     
@@ -347,7 +353,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E6%A0%B7%E6%9C%AC"><span class="nav-number">1.</span> <span class="nav-text">训练样本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E5%BE%81"><span class="nav-number">1.1.</span> <span class="nav-text">特征</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E6%A0%B7%E6%9C%AC%E6%97%B6%E9%81%BF%E5%85%8D%E5%BC%95%E5%85%A5%E6%9C%AA%E6%9D%A5%E4%BF%A1%E6%81%AF"><span class="nav-number">2.</span> <span class="nav-text">生成样本时避免引入未来信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E6%95%B0%E6%8D%AE%E5%AD%98%E5%85%A5%E7%BA%BF%E4%B8%8A%E4%BE%9B%E6%A8%A1%E5%9E%8B%E6%9C%8D%E5%8A%A1%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">特征数据存入线上供模型服务用</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E6%A0%B7%E6%9C%AC"><span class="nav-number">1.</span> <span class="nav-text">训练样本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E5%BE%81"><span class="nav-number">1.1.</span> <span class="nav-text">特征</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E6%A0%B7%E6%9C%AC%E6%97%B6%E9%81%BF%E5%85%8D%E5%BC%95%E5%85%A5%E6%9C%AA%E6%9D%A5%E4%BF%A1%E6%81%AF"><span class="nav-number">2.</span> <span class="nav-text">生成样本时避免引入未来信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E6%95%B0%E6%8D%AE%E5%AD%98%E5%85%A5%E7%BA%BF%E4%B8%8A%E4%BE%9B%E6%A8%A1%E5%9E%8B%E6%9C%8D%E5%8A%A1%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">特征数据存入线上供模型服务用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Youtube-%E4%B8%BE%E4%BE%8B"><span class="nav-number">4.</span> <span class="nav-text">Youtube 举例</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

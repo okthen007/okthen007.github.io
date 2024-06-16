@@ -190,7 +190,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2024-06-16 21:33:16 / Modified: 22:02:48" itemprop="dateCreated datePublished" datetime="2024-06-16T21:33:16+08:00">2024-06-16</time>
+              <time title="Created: 2024-06-16 21:33:16 / Modified: 22:03:27" itemprop="dateCreated datePublished" datetime="2024-06-16T21:33:16+08:00">2024-06-16</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -278,10 +278,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2024-04-06 21:48:09 / Modified: 22:01:52" itemprop="dateCreated datePublished" datetime="2024-04-06T21:48:09+08:00">2024-04-06</time>
+              <time title="Created: 2024-04-06 21:48:09" itemprop="dateCreated datePublished" datetime="2024-04-06T21:48:09+08:00">2024-04-06</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-06-16 22:03:29" itemprop="dateModified" datetime="2024-06-16T22:03:29+08:00">2024-06-16</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -327,7 +333,7 @@
 <p>在做 rating 平均这个操作的时候，我们不要对这个 userId 下面的所有评分取平均值，而是要创建一个滑动窗口，先把这个用户下面的评分按照时间排序，再让这个滑动窗口一一滑动，滑动窗口的位置始终在当前 rating 前一个 rating 的位置。这样，我们再对滑动窗口内的分数做平均，就不会引入未来信息了</p>
 <h2 id="特征数据存入线上供模型服务用"><a href="#特征数据存入线上供模型服务用" class="headerlink" title="特征数据存入线上供模型服务用"></a>特征数据存入线上供模型服务用</h2><figure class="highlight bash"><figcaption><span>特征数据存储到 redis</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">val userKey = userFeaturePrefix + sample.getAs[String](<span class="string">&quot;userId&quot;</span>)</span><br><span class="line">val valueMap = mutable.Map[String, String]()</span><br><span class="line">valueMap(<span class="string">&quot;userRatedMovie1&quot;</span>) = sample.getAs[String](<span class="string">&quot;userRatedMovie1&quot;</span>)</span><br><span class="line">valueMap(<span class="string">&quot;userRatedMovie2&quot;</span>) = sample.getAs[String](<span class="string">&quot;userRatedMovie2&quot;</span>)</span><br><span class="line">...</span><br><span class="line">valueMap(<span class="string">&quot;userAvgRating&quot;</span>) = sample.getAs[String](<span class="string">&quot;userAvgRating&quot;</span>)</span><br><span class="line">valueMap(<span class="string">&quot;userRatingStddev&quot;</span>) = sample.getAs[String](<span class="string">&quot;userRatingStddev&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">redisClient.hset(userKey, JavaConversions.mapAsJavaMap(valueMap))</span><br></pre></td></tr></table></figure>
 <p>在样本处理过程中，我们选用评分和基于评分生成的好评差评标识作为样本标签，并基于 ratings 表的每条数据，通过联合物品和用户数据生成训练样本。在训练样本的生成中，要特别注意“未来信息”的问题，利用 Spark 中的 window 函数滑动生成历史行为相关特征。最后我们利用 Redis 的 hset 操作把线上推断用的特征存储 Redis。</p>
-
+<h2 id="Youtube-举例"><a href="#Youtube-举例" class="headerlink" title="Youtube 举例"></a>Youtube 举例</h2>
       
     </div>
 
